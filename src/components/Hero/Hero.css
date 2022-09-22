@@ -1,0 +1,149 @@
+.hero {
+  height: 100%;
+  padding: 0px 70px 50px 70px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  background-color: #073042;
+}
+
+.hero__logo {
+  margin-bottom: 60px;
+}
+.hero__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+}
+.hero__subcontainer {
+  max-width: 640px;
+  display: flex;
+  flex-direction: column ;
+  justify-content: flex-start;
+}
+.hero__title {
+  margin: 0;
+  padding-bottom: 36px;
+  padding-top: 75px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 50px;
+  line-height: 58px;
+  text-align: left;
+  /* or 116% */
+
+  color: #FFFFFF;
+}
+.hero__subtitle {
+  margin: 0;
+  padding-bottom: 146px;
+  max-width: 302px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: left;
+
+  color: #FFFFFF;
+
+  mix-blend-mode: normal;
+  opacity: 0.5;
+}
+.hero__button {
+  margin-bottom: 25px;
+  
+  opacity: 0.6;
+  border: 1px solid #FFFFFF;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0);
+  width: 129px;
+  height: 36px;
+  
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  color: #FFFFFF;
+}
+.hero__logo {
+}
+
+@media screen and (max-width: 768px) {
+  .hero__container {
+    padding: 140px 0px 26px 0px;
+  
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .hero__subcontainer {
+    align-items: center;
+  }
+
+  .hero__title {
+    padding: 0;
+    padding-bottom: 20px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .hero__subtitle {
+    text-align: center;
+    padding-bottom: 94px;
+    max-width: 259px;
+  }
+  .hero__logo {
+    width: 310px;
+    height: 304px;
+    margin-bottom: 49px;
+  }
+
+  .hero__button {
+    margin-bottom: 0;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .hero {
+    padding: 0 15px 5px 15px;
+  }
+  
+  .hero__container {
+    padding-top: 70px;
+  }
+
+  .hero__logo {
+    width: 210px;
+    height: 206px;
+  }
+
+  .hero__title {
+    padding-bottom: 26px;
+
+    font-weight: 400;
+    font-size: 27px;
+    line-height: 36px;
+  }
+
+  .hero__subtitle {
+    padding-bottom: 79px;
+  }
+}
