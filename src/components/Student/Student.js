@@ -22,16 +22,16 @@ function Student() {
         <ul className='student__portfolio-list'>
           <p className='student__portfolio-title'>Портфолио</p>
           <li className='student__portfolio-item'>
-            <a className='student__portfolio-link' href='#'>Статичный сайт</a>
-            <a className='student__portfolio-icon' href='#'>↗</a>
+            <a className='student__portfolio-link' href='https://sukhanovigorg.github.io/how-to-learn/'>Статичный сайт</a>
+            <a className='student__portfolio-icon' href='https://sukhanovigorg.github.io/how-to-learn/'>↗</a>
           </li>
           <li className='student__portfolio-item'>
-            <a className='student__portfolio-link' href='#'>Адаптивный сайт</a>
-            <a className='student__portfolio-icon' href='#'>↗</a>
+            <a className='student__portfolio-link' href='https://sukhanovigorg.github.io/russian-travel/'>Адаптивный сайт</a>
+            <a className='student__portfolio-icon' href='https://sukhanovigorg.github.io/russian-travel/'>↗</a>
           </li>
           <li className='student__portfolio-item'>
-            <a className='student__portfolio-link' href='#'>Одностраничное приложение</a>
-            <a className='student__portfolio-icon' href='#'>↗</a>
+            <a className='student__portfolio-link' href='https://sukhanovigorg.github.io/mesto-react/'>Одностраничное приложение</a>
+            <a className='student__portfolio-icon' href='https://sukhanovigorg.github.io/mesto-react/'>↗</a>
           </li>
         </ul>
       </div>
@@ -40,3 +40,4 @@ function Student() {
 }
 
 export default Student
+
