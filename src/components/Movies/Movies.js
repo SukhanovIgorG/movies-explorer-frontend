@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import { useNavigate } from "react-router-dom";
 
 import Search from "../Search/Search";
 import MoviesList from "../MoviesList/MoviesList";
@@ -6,6 +7,7 @@ import Footer from "../Footer/Footer";
 import Header from "../Header/Header";
 
 function Movies({movies, savedMoviesStatus}) {
+  const navigate = useNavigate();
 
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -24,20 +26,24 @@ function Movies({movies, savedMoviesStatus}) {
         <div
           className={"header__button-container header__button-container_type_films"}
         >
-          <button className="header__button header__button_films header__button_hover">
+          <button className="header__button header__button_films header__button_hover"
+          onClick={() => navigate("/movies")}>
             Фильмы
           </button>
-          <button className="header__button header__button_colections header__button_hover">
+          <button className="header__button header__button_colections header__button_hover"
+          onClick={() => navigate("/saved-movies")}>
             Сохраненные фильмы
           </button>
         </div>
         <div
           className={"header__button-container header__button-container_type_account"}
         >
-          <button className="header__button header__button_account">
+          <button className="header__button header__button_account"
+          onClick={() => navigate("/profile")}>
             Аккаунт
           </button>
-          <button className="header__button header__button_account-img"></button>
+          <button className="header__button header__button_account-img"
+          onClick={() => navigate("/profile")}></button>
         </div>
         </div>
         <button
