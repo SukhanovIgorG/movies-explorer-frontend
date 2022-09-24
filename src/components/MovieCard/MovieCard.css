@@ -80,7 +80,6 @@
   white-space: nowrap;
   overflow: hidden;
 
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -102,7 +101,7 @@
   align-self: flex-start;
   border: 0;
   width: 41px;
-  height: 16px;
+  height: 32px;
   background-color: rgba(0, 0, 0, 0);
   background-image: url('../../image/trash.svg');
   background-size: 30px;
@@ -116,7 +115,6 @@
 .card__duration {
   text-align: left;
 
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 11px;
@@ -139,7 +137,10 @@
   visibility: visible;
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 420px) {
+  .card__trash {
+    height: 16px;
+  }
 
   .card__image {
     max-height: 168px;

@@ -22,7 +22,10 @@ function Movies({movies, savedMoviesStatus}) {
           className={menuVisible ? "header-menu__background_visible" : "header-menu__background_hidden"}>
         <div
         className={menuVisible ? "header__menu-container-burger header__menu-container-burger_open" : "header__menu-container-burger header__menu-container-burger_clos"}
-      >
+      ><button className="header__button header__button_landing header__button_hover"
+      onClick={() => navigate("/")}>
+        Главная
+      </button>
         <div
           className={"header__button-container header__button-container_type_films"}
         >
@@ -57,12 +60,12 @@ function Movies({movies, savedMoviesStatus}) {
         ></button>
         </div>
       </Header>
-      <div className="Movies">
+      <main className="Movies">
         <Search />
         <MoviesList savedMoviesBlock={savedMoviesStatus} movies={movies}/>
         {/* <Preloader/>
       <MoviesCard/> */}
-      </div>
+      </main>
       <Footer />
     </>
   );

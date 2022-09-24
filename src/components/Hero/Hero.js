@@ -2,7 +2,7 @@ import logo from "../../image/landing-logo.svg";
 
 function Hero() {
   return (
-    <div className="hero">
+    <section className="hero">
       <div className="hero__container">
         <div className="hero__subcontainer">
           <h2 className="hero__title">
@@ -13,7 +13,7 @@ function Hero() {
         </div>
         <img src={logo} alt="hero logo" className="hero__logo" />
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -30,12 +30,12 @@ function Landing() {
           </div>
         </div>
       </Header>
-      <div className="landing">
+      <main className="landing">
         <Hero />
         <About />
         <Tech />
         <Student />
-      </div>
+      </main>
       <Footer />
     </>
   );

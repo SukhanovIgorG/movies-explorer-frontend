@@ -1,6 +1,6 @@
 function Tech() {
   return (
-    <div className='block tech'>
+    <section className='block tech'>
       <h2 className='block__title'>Технологии</h2>
       <div className='tech__container'>
         <div className='tech__title'>7 технологий</div>
@@ -15,7 +15,7 @@ function Tech() {
           <div className='tech__stack-item'>MongoDB</div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

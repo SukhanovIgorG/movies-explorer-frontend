@@ -27,8 +27,6 @@
   border-radius: 40px;
   background-color: #F9F9F9;
 
-
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 13px;
@@ -47,7 +45,6 @@
   border-radius: 40px;
   background-color: #3456F3;
 
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 500;
   font-size: 11px;
@@ -68,15 +65,18 @@
   height: 20px;
   border: none;
   background-color: rgba(0,0,0,0);
-  background-image: url('../../image/smalltumb_active.png');
+  background-image: url('../../image/smalltumb_active.svg');
   background-position: center;
-
 }
+
+.search__option-button_off {
+  background-image: url('../../image/smalltumb_off.svg');
+}
+
 .search__option-span {
   margin: 0;
   padding-left: 12px;
 
-  font-family: 'Inter';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

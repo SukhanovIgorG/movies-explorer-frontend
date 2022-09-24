@@ -6,7 +6,7 @@ function MoviesList({ movies, savedMoviesBlock }) {
   function handleMovieLike() {}
 
   return (
-    <div className="movies-list__container">
+    <section className="movies-list__container">
       <ul className="movies-list">
         {movies.map((movie) => (
           <MovieCard
@@ -30,7 +30,7 @@ function MoviesList({ movies, savedMoviesBlock }) {
       >
         Еще
       </button>
-    </div>
+    </section>
   );
 }
 

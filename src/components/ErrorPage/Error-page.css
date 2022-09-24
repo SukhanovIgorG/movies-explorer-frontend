@@ -13,7 +13,7 @@
 
 .error-page__code {
   margin: 0;
-  font-family: 'Inter';
+  
   font-style: normal;
   font-weight: 400;
   font-size: 140px;
@@ -27,7 +27,7 @@
   margin: 0;
 
   padding-top: 5px;
-  font-family: 'Inter';
+  
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -39,7 +39,7 @@
 
 .error-page__back {
   padding-top: 26vh;
-  font-family: 'Inter';
+  
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function Header({ colorDark, loggedIn, children }) {
   const navigate = useNavigate();
   return (
-    <div
+    <header
       className={
         colorDark ? "header header_type_content" : "header header_type_dialog"
       }
@@ -16,7 +16,7 @@ function Header({ colorDark, loggedIn, children }) {
         onClick={() => navigate("/")}
       />
       {children}
-    </div>
+    </header>
   );
 }
 
