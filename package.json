@@ -1,0 +1,51 @@
+{
+  "name": "movies-explorer-frontend",
+  "version": "1.0.0",
+  "description": "servis for movies",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SukhanovIgorG/movies-explorer-frontend.git"
+  },
+  "author": "Sukhanov Igor",
+  "license": "ISC",
+  "private": false,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^4.0.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy-ghp": "gh-pages -d build",
+    "deploy-server": "npm run build && scp -r ./build/* sukhanovgarik@51.250.4.189:/home/sukhanovgarik/movies-explorer-frontend",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

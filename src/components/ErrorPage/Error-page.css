@@ -1,0 +1,72 @@
+.error-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-page__container  {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 32vh;
+}
+
+.error-page__code {
+  margin: 0;
+  
+  font-style: normal;
+  font-weight: 400;
+  font-size: 140px;
+  line-height: 169px;
+  text-align: center;
+
+  color: #000000;
+}
+
+.error-page__message {
+  margin: 0;
+
+  padding-top: 5px;
+  
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+
+  color: #000000;
+}
+
+.error-page__back {
+  padding-top: 26vh;
+  
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  /* identical to box height */
+
+  text-align: center;
+
+  color: #3456F3;
+}
+
+@media screen and (max-width: 768px){
+  .error-page__container {
+    padding-top: 51vh;
+  }
+}
+
+@media screen and (max-width: 420px){
+  .error-page__code {
+    font-size: 80px;
+    line-height: 97px;
+  }
+  .error-page__message {
+    font-size: 12px;
+    line-height: 15px;
+  }
+  .error-page__container {
+    padding-top: 43vh;
+  }
+}
