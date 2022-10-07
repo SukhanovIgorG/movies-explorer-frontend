@@ -1,35 +1,35 @@
 import MovieCard from "../MovieCard/MovieCard";
 
-function MoviesList({ movies, savedMoviesBlock }) {
-  function handleMovieClick() {}
+function MoviesList({
+  movies,
+  render,
+  savedMoviesBlock,
+  children,
+  addLike,
+  deleteLike,
+}) {
   function handleMovieDelete() {}
   function handleMovieLike() {}
 
   return (
     <section className="movies-list__container">
       <ul className="movies-list">
-        {movies.map((movie) => (
-          <MovieCard
-            onMovieLike={handleMovieLike}
-            onMovieDelete={handleMovieDelete}
-            movie={movie}
-            key={movies._id}
-            savedMoviesStatus={savedMoviesBlock}
-            onClick={(movie) => {
-              handleMovieClick(movie);
-            }}
-          />
-        ))}
+        {Array.isArray(movies)
+          ? movies.map((movie) => (
+              <MovieCard
+                key={movie.id || movie.movieId}
+                onMovieLike={handleMovieLike}
+                onMovieDelete={handleMovieDelete}
+                movie={movie}
+                savedMoviesStatus={savedMoviesBlock}
+                onLike={addLike}
+                onDelete={deleteLike}
+                render={render}
+              />
+            ))
+          : console.log("нет карт для отображения")}
       </ul>
-      <button
-        className={
-          savedMoviesBlock
-            ? "movies-list__button movies-list__button_hidden"
-            : "movies-list__button"
-        }
-      >
-        Еще
-      </button>
+      {children}
     </section>
   );
 }

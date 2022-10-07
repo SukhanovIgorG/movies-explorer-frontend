@@ -45,7 +45,7 @@
 
   color: #000000;
 }
-.movies-list__button_hidden {
+.movies-list__button_off {
   visibility: hidden;
   display: none; 
 }

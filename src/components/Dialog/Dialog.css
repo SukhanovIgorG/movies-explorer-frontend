@@ -186,6 +186,11 @@ margin-top: 14vh;
 
   border-bottom: 0;
 }
+
+.dialog__input_type_profille:focus:active {
+  border: none;
+}
+
 .dialog__input-span {
   display: inline-block;
   width: 100%;

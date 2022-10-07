@@ -20,6 +20,7 @@
 }
 .search__input {
   padding-left: 22px;
+  margin-right: -68px;
   width: 100%;
   height: 46px;
 
@@ -35,6 +36,15 @@
 
 
   color: #A0A0A0;
+}
+
+.search__span {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 17px;
+
+  color: #eb4040;
 }
 
 .search__button {
@@ -70,6 +80,11 @@
 }
 
 .search__option-button_off {
+  width: 36px;
+  height: 20px;
+  border: none;
+  background-color: rgba(0,0,0,0);
+  background-position: center;
   background-image: url('../../image/smalltumb_off.svg');
 }
 
@@ -99,6 +114,10 @@
 
   .search {
     padding: 80px 15px 50px 15px;
+  }
+
+  .search__input {
+    margin-right: -80px;
   }
 
   .search__option-span {

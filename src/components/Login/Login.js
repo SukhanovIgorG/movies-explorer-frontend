@@ -1,8 +1,50 @@
 import headerLogo from "../../image/header-logo.svg";
-import { useNavigate } from "react-router-dom";
 
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../utils/MainApi"
+ 
 function Login({ onLogin }) {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  function handleLogin(status) {
+    onLogin(status);
+  }
+
+  function handleInputEmail(e) {
+    setEmail(e.target.value);
+  }
+
+  function handleInputPassword(e) {
+    setPassword(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    login({ email, password })
+    .then((data) => {
+      localStorage.setItem("JWT", data.token);
+      handleLogin(true);
+      setEmail("");
+      setPassword("");
+      navigate("/movies");
+    }).catch((err)=>{
+      if (err.status === 401) {
+        setError('неправильные почта или пароль')
+      } else if (err.status === 500) {
+        setError('на сервере произошла ошибка, повтоите запрос позже')
+      } else {
+        setError('что-то пошло не так')
+      }
+    });
+  }
+  useEffect(()=>{
+    setError('')
+  }, [email, password])
 
   return (
     <div className="dialog">
@@ -17,15 +59,15 @@ function Login({ onLogin }) {
           Рады видеть!
         </h2>
         <form
-        /* onSubmit={handleSubmit} */
+          onSubmit={handleSubmit} 
         >
           <span className="dialog__input-span dialog__input-span_type_signin">
             email
           </span>
           <input
             type="email"
-            // value={email ? email : ''}
-            // onChange={handleInputEmail}
+            value={email ? email : ''}
+            onChange={handleInputEmail}
             className="dialog__input dialog__input_type_signin"
             placeholder=""
           ></input>
@@ -34,11 +76,13 @@ function Login({ onLogin }) {
           </span>
           <input
             type="password"
-            // value={password ? password : ''}
-            // onChange={handleInputPassword}
+            value={password ? password : ''}
+            onChange={handleInputPassword}
             className="dialog__input dialog__input_type_signin"
             placeholder=""
           ></input>
+          {error && <span className="dialog__input-error">{error}</span>}
+          
           <button className="dialog__button dialog__button_type_log">
             Войти
           </button>

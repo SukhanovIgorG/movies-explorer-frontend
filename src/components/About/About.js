@@ -24,7 +24,7 @@ function About() {
         <div className='about__progress-bar-container'>
           <div className='about__progress-bar'>
             <div className='about__progress-bar-block about__progress-bar-block_back'>1 неделя</div>
-            <div className='about__progress-bar-block about__progress-bar-block_front'>1 неделя</div>
+            <div className='about__progress-bar-block about__progress-bar-block_front'>4 недели</div>
           </div>
           <div className='about__progress-bar'>
             <div className='about__progress-bar-span about__progress-bar-span_back'>Back-end</div>

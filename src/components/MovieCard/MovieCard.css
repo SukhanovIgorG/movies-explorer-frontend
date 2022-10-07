@@ -57,6 +57,7 @@
 }
 
 .card__like_active {
+  background-size: 35px 35px;
   background-image: url('../../image/like_active.svg');
 }
 

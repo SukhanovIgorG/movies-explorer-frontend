@@ -1,0 +1,11 @@
+.preloader__load-image {
+  width: 50px;
+  padding-bottom: 50px;
+}
+.preloader__message {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 17px;
+  color: #434344;
+}

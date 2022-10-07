@@ -6,3 +6,4 @@ const ProtectedRoute = ({loggedIn}) => {
 };
 
 export default ProtectedRoute;
+
