@@ -140,6 +140,10 @@
   /* color: #000000;  */
 }
 
+.header__button_underline {
+  text-decoration: underline;
+}
+
 .header__button_account-img {
   width: 26px;
   height: 30px;

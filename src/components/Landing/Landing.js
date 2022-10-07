@@ -29,7 +29,7 @@ function Landing( {login, menuOpen, menuClose, menuStatus} ) {
                }
              >
                <button
-                 className="header__button header__button_landing header__button_hover theme-dark"
+                 className="header__button header__button_landing header__button_hover theme-dark header__button_underline"
                  onClick={() => {
                   menuClose();
                   navigate("/");

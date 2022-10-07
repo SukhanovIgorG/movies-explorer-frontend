@@ -110,7 +110,7 @@ function Profille ({menuOpen, menuClose, logOut, menuStatus, onSetCurrentUser}) 
               }
             >
               <button
-                className="header__button header__button_account"
+                className="header__button header__button_account header__button_underline"
                 onClick={() => {
                   menuClose();
                   navigate("/profile");
@@ -142,7 +142,7 @@ function Profille ({menuOpen, menuClose, logOut, menuStatus, onSetCurrentUser}) 
   </Header>
     <div className="dialog">
       <div className="dialog__container">
-        <h2 className="dialog__header dialog__header_type_profille">Привет, Виталий!</h2>
+        <h2 className="dialog__header dialog__header_type_profille">Привет, {currentUser.name}!</h2>
         <form 
          onSubmit={handleSubmit}
           >

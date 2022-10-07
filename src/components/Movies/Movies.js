@@ -60,7 +60,7 @@ function Movies({
               }
             >
               <button
-                className="header__button header__button_films header__button_hover"
+                className={savedMoviesStatus ? "header__button header__button_films header__button_hover" : "header__button header__button_films header__button_hover header__button_underline"}
                 onClick={() => {
                   menuClose();
                   navigate("/movies");
@@ -69,7 +69,7 @@ function Movies({
                 Фильмы
               </button>
               <button
-                className="header__button header__button_colections header__button_hover"
+                className={savedMoviesStatus ? "header__button header__button_colections header__button_hover header__button_underline" : "header__button header__button_colections header__button_hover" }
                 onClick={() => {
                   menuClose();
                   navigate("/saved-movies");
