@@ -115,6 +115,10 @@
   color: #FFF;
 }
 
+.dialog__button_type_log-inactive {
+  background-color: #A0A0A0;
+}
+
 .dialog__button_type_log-reg {
 margin-top: 14vh;
 }
@@ -139,14 +143,15 @@ margin-top: 14vh;
   margin-left: 6px;
   color: #3456F3;
 }
+
+.dialog__button-link_type_grey {
+  color: rgb(94, 92, 92)
+}
+
 .dialog__button-link_type_logout {
   color: #FF3055;
 }
 
-.dialog__button-link_type_reg {
-  margin-left: 6px;
-  color: #3456F3;
-}
 
 .dialog__input {
   width: 100%;
@@ -205,10 +210,6 @@ margin-top: 14vh;
   color: #A0A0A0;
 }
 
-.dialog__input-span_type_signin {
-  padding-top: 21px;
-}
-
 .dialog__input-span_type_profille {
   /* position: absolute;
   top: 25px; */
@@ -254,6 +255,16 @@ margin-top: 14vh;
   
   color: #FF3055;
 }
+
+.dialog__input-error_done {  
+  color: #10d53e;
+}
+
+.dialog__input_type_error {
+  color: red
+}
+
+
 @media screen and (max-width: 768px){
   .dialog__header_type_profille {
     padding-top: 237px;
@@ -326,9 +337,6 @@ margin-top: 14vh;
   .dialog__button {
     font-size: 12px;
     line-height: 15px;
-  }
-  .dialog__input-span_type_signin {
-    padding-top: 20px;
   }
   .dialog__input-error {
     font-size: 10px;

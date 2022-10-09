@@ -4,10 +4,28 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
   const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
+    if (localStorage.getItem("savedMovies")) {
+      let savedMovies = Array.from(
+        JSON.parse(localStorage.getItem("savedMovies"))
+      );
+      let filterMovies = savedMovies.filter((item) =>
+        item.nameRU.toLowerCase().includes(movie.nameRU.toLowerCase())
+      );
+      if (filterMovies.length > 0) {
+        setIsLiked(true);
+      } else {
+        setIsLiked(false);
+      }
+    }
+  }, [render, movie.nameRU]);
+  
+  useEffect(() => {
     if (savedMoviesStatus) {
       setIsLiked(true);
     } else {
-      let savedMovies = JSON.parse(localStorage.getItem("savedMovies"));
+      let savedMovies = Array.from(
+        JSON.parse(localStorage.getItem("savedMovies"))
+      );
       let filterMovies = savedMovies.filter((item) =>
         item.nameRU.toLowerCase().includes(movie.nameRU.toLowerCase())
       );
@@ -17,23 +35,11 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
     }
   }, [movie.nameRU, savedMoviesStatus]);
 
-  useEffect(() => {
-    let savedMovies = JSON.parse(localStorage.getItem("savedMovies"));
-    let filterMovies = savedMovies.filter((item) =>
-      item.nameRU.toLowerCase().includes(movie.nameRU.toLowerCase())
-    );
-    if (filterMovies.length > 0) {
-      setIsLiked(true);
-    }
-  }, [render, movie.nameRU]);
-
   function handleMovieDelete() {
-    // deleteMovies(movie.id);
     onDelete(movie);
     setIsLiked(false);
   }
   function handleMovieAdd() {
-    // addMovies(movie);
     setIsLiked(true);
     onLike(movie);
   }

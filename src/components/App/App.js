@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Route,
-  Routes,
-  BrowserRouter,
-} from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import { getMovies } from "../../utils/MoviesApi";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { addMovies, deleteMovies } from "../../utils/MainApi";
@@ -19,35 +15,35 @@ import Profille from "../Profile/Profile";
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 
 function App() {
-// CONSTANTS
+  // CONSTANTS
   const jwt = localStorage.getItem("JWT");
   let screenWidth = window.innerWidth;
 
+  const [allMovies, setAllMovies] = useState([]);
   const [renderMovies, setRenderMovies] = useState([]);
   const [renderSavedMovies, setRenderSavedMovies] = useState([]);
   const [searchMovies, setSearchMovies] = useState([]);
   const [mySavedMovies, setMySavedMovies] = useState([]);
-  const [keyWord, setKeyWord] = useState(localStorage.getItem("keyWord"));
-  const [saveKeyWord, setSaveKeyWord] = useState(
-    localStorage.getItem("saveKeyWord")
-  );
+  const [keyWord, setKeyWord] = useState("");
+  const [saveKeyWord, setSaveKeyWord] = useState("");
   const [startCounter, setStartCounter] = useState(0);
   const [moreCounter, setMoreCounter] = useState(0);
   const [loading, setLoading] = useState(false);
   const [short, setShort] = useState(false);
+  const [shortSave, setShortSave] = useState(false);
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem("JWT"));
   const [currentUser, setCurrentUser] = useState({});
   const [menuVisible, setMenuVisible] = useState(false);
 
-// MENU OPEN/CLOSE
+  // MENU OPEN/CLOSE
   const hendlerOpenMenu = () => {
     setMenuVisible(!menuVisible);
   };
   const hendlerCloseMenu = () => {
     setMenuVisible(false);
-  }
+  };
 
-// USE EFFECT
+  // USE EFFECT
   useEffect(() => {
     if (jwt) {
       autorization(jwt);
@@ -61,49 +57,70 @@ function App() {
   useEffect(() => {
     if (loggedIn) {
       screenControl();
-      Promise.all([me(), myMovies()])
-        .then(([user, movies]) => {
+      Promise.all([me(), myMovies(), getMovies()])
+        .then(([user, saveMovies, apiMovies]) => {
           setCurrentUser(user.user);
-          setMySavedMovies(movies.movie);
-          setRenderSavedMovies(movies.movie);
-          localStorage.setItem("savedMovies", JSON.stringify(movies.movie));
+          setMySavedMovies(saveMovies.movie);
+          setRenderSavedMovies(saveMovies.movie);
+          localStorage.setItem("savedMovies", JSON.stringify(saveMovies.movie));
+          localStorage.setItem("allMovies", JSON.stringify(apiMovies));
           setSearchMovies(
             localStorage.getItem("searchMovies") == null
               ? []
               : JSON.parse(localStorage.getItem("searchMovies"))
           );
+          setAllMovies(
+            localStorage.getItem("allMovies") == null
+              ? []
+              : JSON.parse(localStorage.getItem("allMovies"))
+          );
           setKeyWord(
-            localStorage.getItem("saveKeyWord") == null
-              ? ""
-              : localStorage.getItem("saveKeyWord")
+            localStorage.getItem("keyWord")
+              ? localStorage.getItem("keyWord")
+              : ""
+          );
+          setSaveKeyWord(
+            localStorage.getItem("saveKeyWord")
+              ? localStorage.getItem("saveKeyWord")
+              : ""
           );
           setRenderMovies(
             localStorage.getItem("searchMovies") == null
               ? []
               : JSON.parse(localStorage.getItem("searchMovies"))
           );
-          setShort(localStorage.getItem("conditionShort") == null ?
-          "" : localStorage.getItem("conditionShort"))
+          setShort(
+            localStorage.getItem("conditionShort") == null
+              ? ""
+              : localStorage.getItem("conditionShort")
+          );
         })
         .then(() => {
           // setRenderMovies(searchMovies.slice(0, startCounter))
           // sliceMovieList()
         })
         .catch((err) => {
-          console.log(`ошибка. Сообщение: ${err}`);
+          console.log(`ошибка. Сообщение: ${err.message}`);
         });
     } else {
       console.log("авторизация не выполнена");
     }
   }, [loggedIn]);
   useEffect(() => {
-    sliceMovieList()
+    sliceMovieList();
   }, [searchMovies]);
+  useEffect(()=>{
+    handleSearch();
+  }, [short]);
+  useEffect(()=>{
+    handleSearchInSave();
+  }, [shortSave])
 
   // SEARC & INPUTS
-  const searchMoviesFunc = (arrMovies, name) => {
+  const searchMoviesFunc = (dataMovies = [], name ="", short = false) => {
+    let arrMovies = Array.from(dataMovies);
     if (short) {
-      let shortMovies = arrMovies.filter((item) => item.duration < 60);
+      let shortMovies = arrMovies.filter((item) => item.duration < 41);
       return shortMovies.filter((item) =>
         item.nameRU.toLowerCase().includes(name.toLowerCase())
       );
@@ -116,32 +133,33 @@ function App() {
   const handleSearchInSave = () => {
     setLoading(true);
     let savedArr = JSON.parse(localStorage.getItem("savedMovies"));
-    setRenderSavedMovies(searchMoviesFunc(savedArr, saveKeyWord));
-    setLoading(false);
-    localStorage.setItem("saveKeyWord", saveKeyWord)
+    if (savedArr) {
+      setRenderSavedMovies(searchMoviesFunc(savedArr, saveKeyWord, shortSave));
+      setLoading(false);
+    } else {
+      console.log('handleSearchInSave, фильмов не найдено')
+    }
+    localStorage.setItem("saveKeyWord", saveKeyWord);
   };
-  const handleSearch = () => {
+  async function handleSearch () {
     setLoading(true);
-    getMovies()
-      .then((movies) => {
-        return searchMoviesFunc(movies, keyWord);
-      })
-      .then((res) => {
+    let res = await searchMoviesFunc(allMovies, keyWord, short);
         setLoading(false);
         screenControl();
         setSearchMovies(res);
         setRenderMovies(res.slice(0, startCounter));
 
         localStorage.setItem("searchMovies", JSON.stringify(res));
-        localStorage.setItem("conditionShort", short);
         localStorage.setItem("keyWord", keyWord);
-      });
-
     sliceMovieList();
   };
   function handleChangeShort(value) {
     setShort(value);
-    handleSearch();
+    localStorage.setItem("conditionShort", value);
+  }
+  function handleChangeShortSave(value) {
+    setShortSave(value);
+    localStorage.setItem("conditionShortSave", value);
   }
   const handleInputKeyWord = (value) => {
     setKeyWord(value);
@@ -150,7 +168,7 @@ function App() {
     setSaveKeyWord(value);
   };
 
-// SCREEN CONTROLL
+  // SCREEN CONTROLL
   function screenControl() {
     if (screenWidth < 891) {
       setStartCounter(5);
@@ -176,18 +194,19 @@ function App() {
     resizeFunc();
   };
 
-// MORE
+  // MORE
   const handleMoreMovies = () => {
     screenControl();
     setStartCounter(startCounter + moreCounter);
     setRenderMovies(searchMovies.slice(0, startCounter + moreCounter));
   };
-// LIKE & DELETE
+  // LIKE & DELETE
   const handleLike = (movie) => {
     addMovies(movie).then((res) => {
       console.log("like otvet" + res.movie.nameRU);
       setMySavedMovies([res.movie, ...mySavedMovies]);
-      setRenderSavedMovies([res.movie, ...renderSavedMovies])
+      setRenderSavedMovies([res.movie, ...renderSavedMovies]);
+      localStorage.setItem('savedMovies', JSON.stringify(mySavedMovies))
     });
   };
   const handleDelete = (movie) => {
@@ -197,23 +216,24 @@ function App() {
         Number(item.movieId) === Number(movie.movieId)
     );
     if (dellMovie === undefined) {
-      console.log('film ne nayden')
+      console.log("film ne nayden");
     } else {
-    deleteMovies(dellMovie._id).then(() => {
-      const arrWithOutDellMovie = mySavedMovies.filter(
-        (item) => item.movieId !== dellMovie.movieId
-      );
-      console.log(arrWithOutDellMovie.length);
-      setMySavedMovies(arrWithOutDellMovie);
-      setRenderSavedMovies(arrWithOutDellMovie);
-    });
-  }
+      deleteMovies(dellMovie._id).then(() => {
+        const arrWithOutDellMovie = mySavedMovies.filter(
+          (item) => item.movieId !== dellMovie.movieId
+        );
+        console.log(arrWithOutDellMovie.length);
+        setMySavedMovies(arrWithOutDellMovie);
+        setRenderSavedMovies(arrWithOutDellMovie);
+        localStorage.setItem('savedMovies', JSON.stringify(arrWithOutDellMovie))
+      });
+    }
   };
 
-// LOGIN / LOGOUT
+  // LOGIN / LOGOUT
   function handlerLogin(status) {
-  setLoggedIn(status);
-}
+    setLoggedIn(status);
+  }
   const handleLogOut = () => {
     setLoggedIn(false);
     setCurrentUser({});
@@ -222,54 +242,39 @@ function App() {
     setKeyWord('');
     setSaveKeyWord('');
     localStorage.removeItem("JWT");
-    localStorage.removeItem("saveMovies");
+    localStorage.removeItem("savedMovies");
     localStorage.removeItem("searchMovies");
     localStorage.removeItem("keyWord");
     localStorage.removeItem("saveKeyWord");
-    localStorage.removeItem("conditionShort")
-  }
+    localStorage.removeItem("conditionShort");
+    localStorage.removeItem("conditionShortSave");
+  };
 
   const setCurrentUserHandler = (data) => {
-    setCurrentUser(data)
-  }
+    setCurrentUser(data);
+  };
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <BrowserRouter>
           <Routes>
-            <Route path="/signup" element={<Register />} />
+            <Route path="/signup" element={<Register onLogin={handlerLogin}/>} />
             <Route path="/signin" element={<Login onLogin={handlerLogin} />} />
-            {/* <Route
-              path="/*"
-              element={
-                !loggedIn ? (
-                  <Navigate replace to="/landing" />
-                ) : (
-                  <Navigate replace to="/movies" />
-                )
-              }
-            /> */}
             <Route path="/404" element={<ErrorPage />} />
             <Route
               exact
               path="/"
-              element={<ProtectedRoute loggedIn={loggedIn} />}
-            >
-              <Route
-                exact
-                path="/"
-                element={
-                  <Landing
-                    login={loggedIn}
-                    menuOpen={hendlerOpenMenu}
-                    menuClose={hendlerCloseMenu}
-                    logOut={handleLogOut}
-                    menuStatus={menuVisible}
-                  />
-                }
-              />
-            </Route>
+              element={
+                <Landing
+                  login={loggedIn}
+                  menuOpen={hendlerOpenMenu}
+                  menuClose={hendlerCloseMenu}
+                  logOut={handleLogOut}
+                  menuStatus={menuVisible}
+                />
+              }
+            />
             <Route
               exact
               path="/movies"
@@ -322,8 +327,8 @@ function App() {
                     onSearchKeyWord={handleSearchInSave}
                     onInputKeyWord={handleInputKeyWord}
                     onInputSaveKeyWord={handleInputSaveKeyWord}
-                    conditionShort={short}
-                    onChangeShort={handleChangeShort}
+                    conditionShort={shortSave}
+                    onChangeShort={handleChangeShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={true}
                     onLike={handleLike}
@@ -351,12 +356,7 @@ function App() {
                 }
               />
             </Route>
-            <Route
-              path="/*"
-              element={
-                <ErrorPage />
-              }
-            />
+            <Route path="/*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </CurrentUserContext.Provider>

@@ -2,14 +2,55 @@ import headerLogo from "../../image/header-logo.svg";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../utils/MainApi"
- 
+import { login } from "../../utils/MainApi";
+import { apiErrorController } from "../../utils/errorController";
+import { regEmail } from "../../constants/constans";
+
 function Login({ onLogin }) {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errorApi, setErrorApi] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
+  const [submitActive, setSubmitActive] = useState(false);
+
+  useEffect(() => {
+    if (errorApi || errorEmail || errorPassword) {
+      setSubmitActive(false);
+    } else {
+      setSubmitActive(true);
+    }
+  }, [errorApi, errorEmail, errorPassword]);
+
+  useEffect(() => {
+    if (errorApi || errorEmail || errorPassword) {
+      setSubmitActive(false);
+    } else {
+      setSubmitActive(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setErrorApi("");
+  }, [email, password]);
+
+  const validationEmail = (value) => {
+    if (!regEmail.test(value)) {
+      setErrorEmail(`${value} не является электронной почтой`);
+    } else {
+      setErrorEmail("");
+    }
+  };
+
+  const validationPassword = (value) => {
+    if (value.length < 1) {
+      setErrorPassword(`Пароль не может быть пустым`);
+    } else {
+      setErrorPassword("");
+    }
+  };
 
   function handleLogin(status) {
     onLogin(status);
@@ -17,34 +58,31 @@ function Login({ onLogin }) {
 
   function handleInputEmail(e) {
     setEmail(e.target.value);
+    validationEmail(e.target.value);
   }
-
   function handleInputPassword(e) {
     setPassword(e.target.value);
+    validationPassword(e.target.value);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    login({ email, password })
-    .then((data) => {
-      localStorage.setItem("JWT", data.token);
-      handleLogin(true);
-      setEmail("");
-      setPassword("");
-      navigate("/movies");
-    }).catch((err)=>{
-      if (err.status === 401) {
-        setError('неправильные почта или пароль')
-      } else if (err.status === 500) {
-        setError('на сервере произошла ошибка, повтоите запрос позже')
-      } else {
-        setError('что-то пошло не так')
-      }
-    });
+    if (submitActive) {
+      login({ email, password })
+        .then((data) => {
+          localStorage.setItem("JWT", data.token);
+          handleLogin(true);
+          setEmail("");
+          setPassword("");
+          navigate("/movies");
+        })
+        .catch((err) => {
+          setErrorApi(apiErrorController(err));
+        });
+    } else {
+      setErrorApi("Заполните все поля корректными данными");
+    }
   }
-  useEffect(()=>{
-    setError('')
-  }, [email, password])
 
   return (
     <div className="dialog">
@@ -58,32 +96,38 @@ function Login({ onLogin }) {
         <h2 className="dialog__header dialog__header_type_auth">
           Рады видеть!
         </h2>
-        <form
-          onSubmit={handleSubmit} 
-        >
+        <form onSubmit={handleSubmit}>
           <span className="dialog__input-span dialog__input-span_type_signin">
             email
           </span>
           <input
             type="email"
-            value={email ? email : ''}
+            value={email ? email : ""}
             onChange={handleInputEmail}
-            className="dialog__input dialog__input_type_signin"
+            className={errorEmail ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin"}
             placeholder=""
           ></input>
+          <span className="dialog__input-error">{errorEmail}</span>
           <span className="dialog__input-span dialog__input-span_type_signin">
             пароль
           </span>
           <input
             type="password"
-            value={password ? password : ''}
+            value={password ? password : ""}
             onChange={handleInputPassword}
-            className="dialog__input dialog__input_type_signin"
+            className={errorPassword ? "dialog__input dialog__input_type_signin dialog__input_type_error": "dialog__input dialog__input_type_signin"}
             placeholder=""
           ></input>
-          {error && <span className="dialog__input-error">{error}</span>}
-          
-          <button className="dialog__button dialog__button_type_log">
+          <span className="dialog__input-error">{errorPassword}</span>
+          <span className="dialog__input-error">{errorApi}</span>
+
+          <button
+            className={
+              submitActive
+                ? "dialog__button dialog__button_type_log"
+                : "dialog__button dialog__button_type_log dialog__button_type_log-inactive"
+            }
+          >
             Войти
           </button>
           <div className="dialog__button dialog__button_type_reg">

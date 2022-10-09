@@ -30,13 +30,15 @@ function Search({
     onSaveInput(v.target.value);
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     onSearch();
   };
 
   return (
     <section className="search">
-      <div className="search__area">
+      
+        <form className="search__area" noValidate onSubmit={handleSearch}>
         <input
           className="search__input"
           type="string"
@@ -57,7 +59,8 @@ function Search({
         <button className="search__button" onClick={handleSearch}>
           Найти
         </button>
-      </div>
+        </form>
+     
       {String(keyWord).length === 0 ? (
         <p className="search__span">Введите ключевое слово</p>
       ) : (
