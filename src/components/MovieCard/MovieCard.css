@@ -71,6 +71,7 @@
 
   margin-top: 10px;
   margin-bottom: 5px;
+  max-width: 289px;
 
   font-style: normal;
   font-weight: 900;
@@ -166,6 +167,7 @@
   .card__title {
     margin-top: 0;
     margin-bottom: 8px;
+    max-width: 224px;
 
     font-size: 12px;
     line-height: 15px;

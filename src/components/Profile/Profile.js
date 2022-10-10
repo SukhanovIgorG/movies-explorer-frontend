@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { updateUser } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { regEmail, regName } from "../../constants/constans";
+import { REGEMAIL, REGNAME } from "../../constants/constans";
 
 import Header from "../Header/Header";
 
@@ -24,15 +24,14 @@ function Profille({
   const [messageDone ,setMessageDone] = useState("")
   const [submitActive, setSubmitActive] = useState(false);
 
-  // useEffect(() => {
-  //   setSubmitActive(false);
-  // }, []);
 
   useEffect(() => {
-    if (errorApi || errorName || errorEmail || (name === currentUser.name) && (email === currentUser.email)) {
+    if (errorApi || errorName || errorEmail ) {
+      setSubmitActive(false);
+    } if ((name === currentUser.name) && (email === currentUser.email)) {
       setSubmitActive(false);
     } else {
-        setSubmitActive(true);
+      setSubmitActive(true);
     }
   }, [errorApi, errorEmail, errorName, name, email]);
 
@@ -48,7 +47,7 @@ function Profille({
 
 
   const validationEmail = (value) => {
-    if (!regEmail.test(value)) {
+    if (!REGEMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");
@@ -60,7 +59,7 @@ function Profille({
       setErrorName(
         `Имя не может быть меньше 2 символов, сейчас символов ${value.length}`
       );
-    } else if (!regName.test(value)) {
+    } else if (!REGNAME.test(value)) {
       setErrorName(`недопустимые символы`);
     } else if (value.length > 30) {
       setErrorName(
@@ -93,6 +92,9 @@ function Profille({
           setErrorApi(apiErrorController(err));
         });
     } else {
+      if ((name === currentUser.name) && (email === currentUser.email)) {
+        return setErrorApi("Данные совпадают с текущими");
+      }
       setErrorApi("Заполните все поля корректными данными");
     }
   }
@@ -128,46 +130,38 @@ function Profille({
                 "header__button-container header__button-container_type_films"
               }
             >
+              <Link to="/movies" onClick={menuClose}>
               <button
                 className="header__button header__button_films header__button_hover"
-                onClick={() => {
-                  menuClose();
-                  navigate("/movies");
-                }}
               >
                 Фильмы
               </button>
+              </Link>
+              <Link to="/saved-movies" onClick={menuClose}>
               <button
                 className="header__button header__button_colections header__button_hover"
-                onClick={() => {
-                  menuClose();
-                  navigate("/saved-movies");
-                }}
               >
                 Сохраненные фильмы
               </button>
+              </Link>
             </div>
             <div
               className={
                 "header__button-container header__button-container_type_account"
               }
             >
+              <Link to="/profile" onClick={menuClose}>
               <button
                 className="header__button header__button_account header__button_underline"
-                onClick={() => {
-                  menuClose();
-                  navigate("/profile");
-                }}
               >
                 Аккаунт
               </button>
+              </Link>
+              <Link to="/profile" onClick={menuClose}>
               <button
                 className="header__button header__button_account-img"
-                onClick={() => {
-                  menuClose();
-                  navigate("/profile");
-                }}
               ></button>
+              </Link>
             </div>
           </div>
           <button

@@ -140,9 +140,6 @@
   /* color: #000000;  */
 }
 
-.header__button_underline {
-  text-decoration: underline;
-}
 
 .header__button_account-img {
   width: 26px;
@@ -194,6 +191,7 @@
   width: 100%;
   background-color: rgba(0,0,0,0)
 }
+
 
 @media screen and (min-width: 769px) {
   .header__menu-button {
@@ -339,6 +337,10 @@
     background-color: #2BE080;
   }
 }
+.header__button_underline {
+  text-decoration: underline;
+}
+
 
 @media screen and (max-width: 420px) {
   .header {
@@ -407,4 +409,8 @@
     min-width: 320px;
     max-width: 320px;
   }
+}
+
+.header__button_underline-not {
+  text-decoration: none;
 }

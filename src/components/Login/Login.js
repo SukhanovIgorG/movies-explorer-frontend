@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { regEmail } from "../../constants/constans";
+import { REGEMAIL } from "../../constants/constans";
 
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ function Login({ onLogin }) {
   }, [email, password]);
 
   const validationEmail = (value) => {
-    if (!regEmail.test(value)) {
+    if (!REGEMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");

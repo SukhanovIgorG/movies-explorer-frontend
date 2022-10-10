@@ -13,11 +13,8 @@ function Search({
   const [keyWord, setKeyWord] = useState(keyWordState);
   const [saveKeyWord, setSaveKeyWord] = useState(saveKeyWordState);
 
-  const [short, setShort] = useState(shortState);
-
   const handleShort = () => {
-    setShort(!short);
-    onSetShort(!short);
+    onSetShort(!shortState);
   };
 
   const handleInput = (v) => {
@@ -69,7 +66,7 @@ function Search({
       <div className="search__option-container">
         <button
           className={
-            !short ? "search__option-button_off" : "search__option-button"
+            !shortState ? "search__option-button_off" : "search__option-button"
           }
           onClick={handleShort}
         ></button>

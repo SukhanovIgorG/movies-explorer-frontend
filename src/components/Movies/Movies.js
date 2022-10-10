@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from 'react'
+import { useNavigate, Link } from "react-router-dom";
 
 import Search from "../Search/Search";
 import MoviesList from "../MoviesList/MoviesList";
@@ -24,9 +25,16 @@ function Movies({
   buttonStatus,
   onLike,
   onDelete,
+  onReset
 }) {
   const navigate = useNavigate();
   let movies = Array.from(onMovies);
+
+  useEffect(() => {
+    if (savedMoviesStatus) {
+      onReset();
+    }
+}, [navigate]);
 
   return (
     <>
@@ -46,11 +54,12 @@ function Movies({
             }
           >
             <button
-              className="header__button header__button_landing header__button_hover"
-              onClick={() => {
+              className="header__button header__button_hover header__button_landing header__button_underline-not"
+              onClick={()=>{
                 menuClose();
                 navigate("/");
-              }}
+              }
+              }
             >
               Главная
             </button>
@@ -59,54 +68,46 @@ function Movies({
                 "header__button-container header__button-container_type_films"
               }
             >
+              <Link to="/movies" onClick={menuClose}>
               <button
                 className={
                   savedMoviesStatus
                     ? "header__button header__button_films header__button_hover"
                     : "header__button header__button_films header__button_hover header__button_underline"
                 }
-                onClick={() => {
-                  menuClose();
-                  navigate("/movies");
-                }}
               >
                 Фильмы
               </button>
+              </Link>
+              <Link to="/saved-movies" onClick={menuClose}>
               <button
                 className={
                   savedMoviesStatus
                     ? "header__button header__button_colections header__button_hover header__button_underline"
                     : "header__button header__button_colections header__button_hover"
                 }
-                onClick={() => {
-                  menuClose();
-                  navigate("/saved-movies");
-                }}
               >
                 Сохраненные фильмы
               </button>
+              </Link>
             </div>
             <div
               className={
                 "header__button-container header__button-container_type_account"
               }
             >
+              <Link to="/profile" onClick={menuClose}>
               <button
                 className="header__button header__button_account"
-                onClick={() => {
-                  menuClose();
-                  navigate("/profile");
-                }}
               >
                 Аккаунт
               </button>
+              </Link>
+              <Link to="/profile" onClick={menuClose}>
               <button
                 className="header__button header__button_account-img"
-                onClick={() => {
-                  menuClose();
-                  navigate("/profile");
-                }}
               ></button>
+              </Link>
             </div>
           </div>
           <button

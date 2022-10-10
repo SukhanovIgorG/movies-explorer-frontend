@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import Hero from "../Hero/Hero";
 import About from "../About/About";
@@ -28,66 +28,55 @@ function Landing( {login, menuOpen, menuClose, menuStatus} ) {
                    : "header__menu-container-burger header__menu-container-burger_clos"
                }
              >
+              <Link to='/f' onClick={menuClose}>
                <button
                  className="header__button header__button_landing header__button_hover theme-dark header__button_underline"
-                 onClick={() => {
-                  menuClose();
-                  navigate("/");
-                }
-                 }
+                //  onClick={() => {
+                //   menuClose();
+                //   navigate("/");
+                // }
+                //  }
                >
                  Главная
                </button>
+               </Link>
                <div
                  className={
                    "header__button-container header__button-container_type_films"
                  }
                >
+                <Link  to='/movies' onClick={menuClose}>
                  <button
                    className="header__button header__button_films header__button_hover theme-dark"
-                   onClick={() => {
-                    menuClose();
-                    navigate("/movies");
-                  }
-                }
                  >
                    Фильмы
                  </button>
+                 </Link >
+                 <Link  to='/saved-movies' onClick={menuClose}>
                  <button
                    className="header__button header__button_colections header__button_hover theme-dark"
-                   onClick={() => {
-                    menuClose();
-                    navigate("/saved-movies");
-                  }
-                }
                  >
                    Сохраненные фильмы
                  </button>
+                 </Link>
                </div>
                <div
                  className={
                    "header__button-container header__button-container_type_account"
                  }
-               >
+               ><Link  to='/profile' onClick={menuClose}>
                  <button
                    className="header__button header__button_account theme-dark"
-                   onClick={() => {
-                      menuClose();
-                      navigate("/profile");
-                    }
-                  }
                  >
                    Аккаунт
-                 </button>
+                 </button></Link>
+                 <Link  to='/profile' onClick={menuClose}>
                  <button
                    className={menuStatus ? "header__button header__button_account-img" : "header__button header__button_account-img header__button_account-img_color-dark"}
-                   onClick={() => {
-                     menuClose();
-                      navigate("/profile");
-                    }
-                  }
                  ></button>
+                 </Link>
                </div>
+               
              </div>
              <button
                onClick={menuOpen}

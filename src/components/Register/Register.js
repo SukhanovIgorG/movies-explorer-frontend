@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { register, login } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { regEmail, regName } from "../../constants/constans";
+import { REGEMAIL, REGNAME } from "../../constants/constans";
 
 function Register({ onLogin }) {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ function Register({ onLogin }) {
   }, [errorApi, errorEmail, errorName, errorPassword]);
 
   const validationEmail = (value) => {
-    if (!regEmail.test(value)) {
+    if (!REGEMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");
@@ -45,7 +45,7 @@ function Register({ onLogin }) {
       setErrorName(
         `Имя не может быть меньше 2 символов, сейчас символов ${value.length}`
       );
-    } else if (!regName.test(value)) {
+    } else if (!REGNAME.test(value)) {
       setErrorName(
         `недопустимые символы`
       );

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
   const [isLiked, setIsLiked] = useState(false);
+  let setMovie = movie ? movie : {};
 
   useEffect(() => {
     if (localStorage.getItem("savedMovies")) {
@@ -23,9 +24,8 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
     if (savedMoviesStatus) {
       setIsLiked(true);
     } else {
-      let savedMovies = Array.from(
-        JSON.parse(localStorage.getItem("savedMovies"))
-      );
+      let savedMovies = localStorage.getItem("savedMovies") ? Array.from(
+        JSON.parse(localStorage.getItem("savedMovies")) ) : [];
       let filterMovies = savedMovies.filter((item) =>
         item.nameRU.toLowerCase().includes(movie.nameRU.toLowerCase())
       );
@@ -46,13 +46,13 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
 
   return (
     <li className="card">
-      <a href={movie.trailerLink} target="_blanc">
+      <a href={setMovie.trailerLink} target="_blanc">
         <img
           className="card__image"
           src={
             savedMoviesStatus
-              ? movie.image
-              : `https://api.nomoreparties.co/${movie.image.url}`
+              ? setMovie.image
+              : `https://api.nomoreparties.co/${setMovie.image.url}`
           }
           alt={movie.nameRU}
         />
@@ -60,9 +60,9 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
 
       <div className="card__info">
         <div className="card__info-container">
-          <h2 className="card__title">{movie.nameRU}</h2>
-          <p className="card__duration">{`${Math.floor(movie.duration / 60)}ч ${
-            movie.duration % 60
+          <h2 className="card__title">{setMovie.nameRU}</h2>
+          <p className="card__duration">{`${Math.floor(setMovie.duration / 60)}ч ${
+            setMovie.duration % 60
           }м `}</p>
         </div>
         <button

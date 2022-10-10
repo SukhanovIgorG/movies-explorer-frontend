@@ -1,9 +1,25 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { 
+  Route,
+  Routes,
+  BrowserRouter,
+  // useNavigate,
+  // useLocation
+ } from "react-router-dom";
 import { getMovies } from "../../utils/MoviesApi";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { addMovies, deleteMovies } from "../../utils/MainApi";
 import { autorization, me, myMovies } from "../../utils/MainApi";
+import {
+  SCREENSIZEMIN,
+  SCREENSIZEMAX,
+  MOVIESTARTCOUNTMIN,
+  MOVIESTARTCOUNTMID,
+  MOVIESTARTCOUNTMAX,
+  MOVIEMORECOUNTMIN,
+  MOVIEMORECOUNTMID,
+  MOVIEMORECOUNTMAX,
+} from "../../constants/constans";
 
 // COMPONENTS
 import Login from "../Login/Login";
@@ -16,9 +32,10 @@ import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   // CONSTANTS
-  const jwt = localStorage.getItem("JWT");
+  // const navigate = useNavigate();
+  // const location = useLocation();
   let screenWidth = window.innerWidth;
-
+  const jwt = localStorage.getItem("JWT");
   const [allMovies, setAllMovies] = useState([]);
   const [renderMovies, setRenderMovies] = useState([]);
   const [renderSavedMovies, setRenderSavedMovies] = useState([]);
@@ -44,35 +61,48 @@ function App() {
   };
 
   // USE EFFECT
+  useEffect(()=>{
+    if (loggedIn) {
+      if (localStorage.getItem("allMovies")) {
+        setAllMovies(JSON.parse(localStorage.getItem("allMovies")))
+        } else {
+          getMovies()
+            .then((apiMovies)=>{
+              localStorage.setItem("allMovies", JSON.stringify(apiMovies));
+              setAllMovies(apiMovies);
+            }
+          )
+        }
+    } 
+  }, [loggedIn]) 
+
   useEffect(() => {
     if (jwt) {
-      autorization(jwt);
-      setLoggedIn(true);
+      autorization(jwt)
+        .then(()=>{
+          setLoggedIn(true);
+        })
     } else {
       console.log("jwt не найден");
       setCurrentUser({});
       setLoggedIn(false);
+      handleLogOut();
     }
   }, [jwt]);
+
   useEffect(() => {
     if (loggedIn) {
       screenControl();
-      Promise.all([me(), myMovies(), getMovies()])
-        .then(([user, saveMovies, apiMovies]) => {
+      Promise.all([me(), myMovies()])
+        .then(([user, saveMovies]) => {
           setCurrentUser(user.user);
           setMySavedMovies(saveMovies.movie);
           setRenderSavedMovies(saveMovies.movie);
           localStorage.setItem("savedMovies", JSON.stringify(saveMovies.movie));
-          localStorage.setItem("allMovies", JSON.stringify(apiMovies));
           setSearchMovies(
             localStorage.getItem("searchMovies") == null
               ? []
               : JSON.parse(localStorage.getItem("searchMovies"))
-          );
-          setAllMovies(
-            localStorage.getItem("allMovies") == null
-              ? []
-              : JSON.parse(localStorage.getItem("allMovies"))
           );
           setKeyWord(
             localStorage.getItem("keyWord")
@@ -95,10 +125,6 @@ function App() {
               : localStorage.getItem("conditionShort")
           );
         })
-        .then(() => {
-          // setRenderMovies(searchMovies.slice(0, startCounter))
-          // sliceMovieList()
-        })
         .catch((err) => {
           console.log(`ошибка. Сообщение: ${err.message}`);
         });
@@ -106,19 +132,22 @@ function App() {
       console.log("авторизация не выполнена");
     }
   }, [loggedIn]);
+
   useEffect(() => {
     sliceMovieList();
   }, [searchMovies]);
-  useEffect(()=>{
+
+  useEffect(() => {
     handleSearch();
   }, [short]);
-  useEffect(()=>{
+
+  useEffect(() => {
     handleSearchInSave();
-  }, [shortSave])
+  }, [shortSave]);
 
   // SEARC & INPUTS
-  const searchMoviesFunc = (dataMovies = [], name ="", short = false) => {
-    let arrMovies = Array.from(dataMovies);
+  const searchMoviesFunc = (dataMovies = [], name = "", short = false) => {
+    let arrMovies = dataMovies ? Array.from(dataMovies) : [];
     if (short) {
       let shortMovies = arrMovies.filter((item) => item.duration < 41);
       return shortMovies.filter((item) =>
@@ -137,22 +166,22 @@ function App() {
       setRenderSavedMovies(searchMoviesFunc(savedArr, saveKeyWord, shortSave));
       setLoading(false);
     } else {
-      console.log('handleSearchInSave, фильмов не найдено')
+      console.log("handleSearchInSave, фильмов не найдено");
     }
     localStorage.setItem("saveKeyWord", saveKeyWord);
   };
-  async function handleSearch () {
+  async function handleSearch() {
     setLoading(true);
     let res = await searchMoviesFunc(allMovies, keyWord, short);
-        setLoading(false);
-        screenControl();
-        setSearchMovies(res);
-        setRenderMovies(res.slice(0, startCounter));
+    setLoading(false);
+    screenControl();
+    setSearchMovies(res);
+    setRenderMovies(res.slice(0, startCounter));
 
-        localStorage.setItem("searchMovies", JSON.stringify(res));
-        localStorage.setItem("keyWord", keyWord);
+    localStorage.setItem("searchMovies", JSON.stringify(res));
+    localStorage.setItem("keyWord", keyWord);
     sliceMovieList();
-  };
+  }
   function handleChangeShort(value) {
     setShort(value);
     localStorage.setItem("conditionShort", value);
@@ -170,17 +199,17 @@ function App() {
 
   // SCREEN CONTROLL
   function screenControl() {
-    if (screenWidth < 891) {
-      setStartCounter(5);
-      setMoreCounter(5);
+    if (screenWidth < SCREENSIZEMIN) {
+      setStartCounter(MOVIESTARTCOUNTMIN);
+      setMoreCounter(MOVIEMORECOUNTMIN);
     }
-    if (891 < screenWidth && screenWidth < 1280) {
-      setStartCounter(8);
-      setMoreCounter(2);
+    if (SCREENSIZEMIN < screenWidth && screenWidth < SCREENSIZEMAX) {
+      setStartCounter(MOVIESTARTCOUNTMID);
+      setMoreCounter(MOVIEMORECOUNTMID);
     }
-    if (1280 < screenWidth) {
-      setStartCounter(12);
-      setMoreCounter(3);
+    if (SCREENSIZEMAX < screenWidth) {
+      setStartCounter(MOVIESTARTCOUNTMAX);
+      setMoreCounter(MOVIEMORECOUNTMAX);
     }
   }
   const sliceMovieList = () => {
@@ -206,7 +235,7 @@ function App() {
       console.log("like otvet" + res.movie.nameRU);
       setMySavedMovies([res.movie, ...mySavedMovies]);
       setRenderSavedMovies([res.movie, ...renderSavedMovies]);
-      localStorage.setItem('savedMovies', JSON.stringify(mySavedMovies))
+      localStorage.setItem("savedMovies", JSON.stringify(mySavedMovies));
     });
   };
   const handleDelete = (movie) => {
@@ -225,7 +254,10 @@ function App() {
         console.log(arrWithOutDellMovie.length);
         setMySavedMovies(arrWithOutDellMovie);
         setRenderSavedMovies(arrWithOutDellMovie);
-        localStorage.setItem('savedMovies', JSON.stringify(arrWithOutDellMovie))
+        localStorage.setItem(
+          "savedMovies",
+          JSON.stringify(arrWithOutDellMovie)
+        );
       });
     }
   };
@@ -239,9 +271,10 @@ function App() {
     setCurrentUser({});
     setSearchMovies([]);
     setMySavedMovies([]);
-    setKeyWord('');
-    setSaveKeyWord('');
+    setKeyWord("");
+    setSaveKeyWord("");
     localStorage.removeItem("JWT");
+    localStorage.removeItem("allMovies")
     localStorage.removeItem("savedMovies");
     localStorage.removeItem("searchMovies");
     localStorage.removeItem("keyWord");
@@ -253,13 +286,19 @@ function App() {
   const setCurrentUserHandler = (data) => {
     setCurrentUser(data);
   };
+  const onResetSavedMoviesSearch = () => {
+    setRenderSavedMovies(mySavedMovies)
+  }
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <BrowserRouter>
           <Routes>
-            <Route path="/signup" element={<Register onLogin={handlerLogin}/>} />
+            <Route
+              path="/signup"
+              element={<Register onLogin={handlerLogin} />}
+            />
             <Route path="/signin" element={<Login onLogin={handlerLogin} />} />
             <Route path="/404" element={<ErrorPage />} />
             <Route
@@ -302,6 +341,7 @@ function App() {
                     buttonStatus={searchMovies.length === renderMovies.length}
                     onLike={handleLike}
                     onDelete={handleDelete}
+                    onReset={onResetSavedMoviesSearch}
                   />
                 }
               />
@@ -333,6 +373,7 @@ function App() {
                     buttonStatus={true}
                     onLike={handleLike}
                     onDelete={handleDelete}
+                    onReset={onResetSavedMoviesSearch}
                   />
                 }
               />
