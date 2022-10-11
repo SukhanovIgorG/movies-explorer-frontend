@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Search({
   savedMoviesStatus,
@@ -12,6 +12,12 @@ function Search({
 }) {
   const [keyWord, setKeyWord] = useState(keyWordState);
   const [saveKeyWord, setSaveKeyWord] = useState(saveKeyWordState);
+
+  useEffect(()=>{
+    setKeyWord(localStorage.getItem("keyWord"));
+    onSetShort(savedMoviesStatus ? localStorage.getItem("conditionShortSave") : localStorage.getItem("conditionShort"))
+  }, [])
+
 
   const handleShort = () => {
     onSetShort(!shortState);

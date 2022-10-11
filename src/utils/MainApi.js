@@ -23,7 +23,10 @@ export const register = ({ name, email, password }) => {
     .then((res) => {
       console.log("second then in register");
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 export const login = ({ email, password }) => {
@@ -41,7 +44,10 @@ export const login = ({ email, password }) => {
     .then((res) => {
       localStorage.setItem("JWT", res.token);
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 // проверка мейла
@@ -56,7 +62,10 @@ export const me = () => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 // проверка токена
 export const autorization = (token) => {
@@ -70,7 +79,10 @@ export const autorization = (token) => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 export const updateUser = ( {name, email}) => {
@@ -88,7 +100,10 @@ export const updateUser = ( {name, email}) => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 export const myMovies = () => {
@@ -102,7 +117,10 @@ export const myMovies = () => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 export const addMovies = (movie) => {
@@ -129,7 +147,10 @@ export const addMovies = (movie) => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };
 
 export const deleteMovies = (_id) => {
@@ -143,5 +164,8 @@ export const deleteMovies = (_id) => {
     .then((res) => checkResponse(res))
     .then((res) => {
       return res;
-    });
+    })
+    .catch((err)=>{
+      return console.log(err.message)
+    })
 };

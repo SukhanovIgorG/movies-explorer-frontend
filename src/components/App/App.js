@@ -11,6 +11,7 @@ import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { addMovies, deleteMovies } from "../../utils/MainApi";
 import { autorization, me, myMovies } from "../../utils/MainApi";
 import {
+  REGURL,
   SCREENSIZEMIN,
   SCREENSIZEMAX,
   MOVIESTARTCOUNTMIN,
@@ -72,7 +73,9 @@ function App() {
               setAllMovies(apiMovies);
             }
           )
-        }
+      };
+      
+      if (localStorage.getItem("keyWord")) {setKeyWord(localStorage.getItem("keyWord"))}
     } 
   }, [loggedIn]) 
 
@@ -104,11 +107,11 @@ function App() {
               ? []
               : JSON.parse(localStorage.getItem("searchMovies"))
           );
-          setKeyWord(
-            localStorage.getItem("keyWord")
-              ? localStorage.getItem("keyWord")
-              : ""
-          );
+          // setKeyWord(
+          //   localStorage.getItem("keyWord")
+          //     ? localStorage.getItem("keyWord")
+          //     : ""
+          // );
           setSaveKeyWord(
             localStorage.getItem("saveKeyWord")
               ? localStorage.getItem("saveKeyWord")
@@ -179,7 +182,7 @@ function App() {
     setRenderMovies(res.slice(0, startCounter));
 
     localStorage.setItem("searchMovies", JSON.stringify(res));
-    localStorage.setItem("keyWord", keyWord);
+    // localStorage.setItem("keyWord", keyWord);
     sliceMovieList();
   }
   function handleChangeShort(value) {
@@ -192,6 +195,7 @@ function App() {
   }
   const handleInputKeyWord = (value) => {
     setKeyWord(value);
+    localStorage.setItem("keyWord", value);
   };
   const handleInputSaveKeyWord = (value) => {
     setSaveKeyWord(value);
@@ -230,13 +234,22 @@ function App() {
     setRenderMovies(searchMovies.slice(0, startCounter + moreCounter));
   };
   // LIKE & DELETE
-  const handleLike = (movie) => {
+  const checkMovieValid = (preMovie)  => {
+    let movie = preMovie;
+    if (!REGURL.test(preMovie.trailerLink)) {
+      movie.trailerLink = 'https://youtu.be/'
+      return movie
+    } else {
+      return movie
+    }
+  }
+  const handleLike = (preMovie) => {
+    let movie = checkMovieValid(preMovie);
     addMovies(movie).then((res) => {
-      console.log("like otvet" + res.movie.nameRU);
       setMySavedMovies([res.movie, ...mySavedMovies]);
       setRenderSavedMovies([res.movie, ...renderSavedMovies]);
       localStorage.setItem("savedMovies", JSON.stringify(mySavedMovies));
-    });
+    })
   };
   const handleDelete = (movie) => {
     const dellMovie = mySavedMovies.find(
@@ -245,13 +258,11 @@ function App() {
         Number(item.movieId) === Number(movie.movieId)
     );
     if (dellMovie === undefined) {
-      console.log("film ne nayden");
     } else {
       deleteMovies(dellMovie._id).then(() => {
         const arrWithOutDellMovie = mySavedMovies.filter(
           (item) => item.movieId !== dellMovie.movieId
         );
-        console.log(arrWithOutDellMovie.length);
         setMySavedMovies(arrWithOutDellMovie);
         setRenderSavedMovies(arrWithOutDellMovie);
         localStorage.setItem(

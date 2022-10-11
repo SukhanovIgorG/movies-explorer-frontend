@@ -33,15 +33,15 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
         setIsLiked(true);
       }
     }
-  }, [movie.nameRU, savedMoviesStatus]);
+  }, [ movie.nameRU, savedMoviesStatus, isLiked ]);
 
   function handleMovieDelete() {
     onDelete(movie);
     setIsLiked(false);
   }
-  function handleMovieAdd() {
-    setIsLiked(true);
+  async function handleMovieAdd() {
     onLike(movie);
+    setIsLiked(true);
   }
 
   return (
