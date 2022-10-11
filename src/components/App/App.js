@@ -74,10 +74,8 @@ function App() {
             }
           )
       };
-      
-      if (localStorage.getItem("keyWord")) {setKeyWord(localStorage.getItem("keyWord"))}
     } 
-  }, [loggedIn]) 
+  }, []) 
 
   useEffect(() => {
     if (jwt) {
@@ -107,16 +105,6 @@ function App() {
               ? []
               : JSON.parse(localStorage.getItem("searchMovies"))
           );
-          // setKeyWord(
-          //   localStorage.getItem("keyWord")
-          //     ? localStorage.getItem("keyWord")
-          //     : ""
-          // );
-          setSaveKeyWord(
-            localStorage.getItem("saveKeyWord")
-              ? localStorage.getItem("saveKeyWord")
-              : ""
-          );
           setRenderMovies(
             localStorage.getItem("searchMovies") == null
               ? []
@@ -124,7 +112,7 @@ function App() {
           );
           setShort(
             localStorage.getItem("conditionShort") == null
-              ? ""
+              ? false
               : localStorage.getItem("conditionShort")
           );
         })

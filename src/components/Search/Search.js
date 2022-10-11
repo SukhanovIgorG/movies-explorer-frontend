@@ -15,7 +15,6 @@ function Search({
 
   useEffect(()=>{
     setKeyWord(localStorage.getItem("keyWord"));
-    onSetShort(savedMoviesStatus ? localStorage.getItem("conditionShortSave") : localStorage.getItem("conditionShort"))
   }, [])
 
 
@@ -64,7 +63,7 @@ function Search({
         </button>
         </form>
      
-      {String(keyWord).length === 0 ? (
+      {(savedMoviesStatus && String(saveKeyWord).length === 0) || (!savedMoviesStatus && String(keyWord).length === 0) ? (
         <p className="search__span">Введите ключевое слово</p>
       ) : (
         ""
@@ -72,7 +71,7 @@ function Search({
       <div className="search__option-container">
         <button
           className={
-            !shortState ? "search__option-button_off" : "search__option-button"
+            shortState ? "search__option-button" : "search__option-button_off"
           }
           onClick={handleShort}
         ></button>
