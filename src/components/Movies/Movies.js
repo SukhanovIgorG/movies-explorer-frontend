@@ -28,7 +28,6 @@ function Movies({
   onLike,
   onDelete,
   onReset,
-  onMount
 }) {
   const navigate = useNavigate();
   let movies = Array.from(onMovies);
@@ -36,9 +35,7 @@ function Movies({
   useEffect(() => {
     if (savedMoviesStatus) {
       onReset();
-    } else if (localStorage.getItem("searchMovies")) {
-      onMount();
-    }
+    } 
 }, [navigate]);
 
   return (

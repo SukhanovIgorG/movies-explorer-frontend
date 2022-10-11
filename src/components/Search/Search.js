@@ -21,6 +21,7 @@ function Search({
     setKeyWord(localStorage.getItem("keyWord"));
     onInput(localStorage.getItem("keyWord"));
     onSetShort(JSON.parse(localStorage.getItem("conditionShort")));
+    // onSearch()
   }, []);
 
   const checkValid = (text) => {

@@ -38,7 +38,7 @@ function App() {
   let screenWidth = window.innerWidth;
   const jwt = localStorage.getItem("JWT");
   const [allMovies, setAllMovies] = useState([]);
-  const [renderMovies, setRenderMovies] = useState([]);
+  const [renderMovies, setRenderMovies] = useState(JSON.parse(localStorage.getItem("searchMovies")));
   const [renderSavedMovies, setRenderSavedMovies] = useState([]);
   const [searchMovies, setSearchMovies] = useState([]);
   const [mySavedMovies, setMySavedMovies] = useState([]);
@@ -52,6 +52,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem("JWT"));
   const [currentUser, setCurrentUser] = useState({});
   const [menuVisible, setMenuVisible] = useState(false);
+  const [firstLounch, setFirstLounch] = useState(false);
 
   // MENU OPEN/CLOSE
   const hendlerOpenMenu = () => {
@@ -78,7 +79,7 @@ function App() {
       setSearchMovies( JSON.parse(localStorage.getItem("searchMovies")) );
       setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) );
     };
-  }, []) 
+  }, [loggedIn]) 
 
   useEffect(() => {
     if (jwt) {
@@ -155,8 +156,13 @@ function App() {
     setLoading(false);
     screenControl();
     setSearchMovies(res);
-    setRenderMovies(res.slice(0, startCounter));
-    localStorage.setItem("searchMovies", JSON.stringify(res));
+    // setRenderMovies(res.slice(0, startCounter));
+    if (!firstLounch) {
+      setFirstLounch(true);
+    } else {
+      localStorage.setItem("searchMovies", JSON.stringify(res));
+ 
+    }
     sliceMovieList();
   };
 
@@ -267,10 +273,6 @@ function App() {
     setRenderSavedMovies(mySavedMovies)
   };
 
-  const onMountLastRes = () => {
-    setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) );
-  }
-
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
@@ -325,7 +327,6 @@ function App() {
                     onLike={handleLike}
                     onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
-                    onMount={onMountLastRes}
                   />
                 }
               />
