@@ -38,7 +38,7 @@ function App() {
   let screenWidth = window.innerWidth;
   const jwt = localStorage.getItem("JWT");
   const [allMovies, setAllMovies] = useState([]);
-  const [renderMovies, setRenderMovies] = useState(JSON.parse(localStorage.getItem("searchMovies")));
+  const [renderMovies, setRenderMovies] = useState([]);
   const [renderSavedMovies, setRenderSavedMovies] = useState([]);
   const [searchMovies, setSearchMovies] = useState([]);
   const [mySavedMovies, setMySavedMovies] = useState([]);
@@ -76,8 +76,8 @@ function App() {
           )
       };
       console.log('point');
-      setSearchMovies( JSON.parse(localStorage.getItem("searchMovies")) );
-      setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) );
+      if (localStorage.getItem("searchMovies")) {setSearchMovies( JSON.parse(localStorage.getItem("searchMovies")) )}
+      if (JSON.parse(localStorage.getItem("searchMovies"))) {setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) )}
     };
   }, [loggedIn]) 
 

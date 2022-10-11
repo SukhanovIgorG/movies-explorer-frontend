@@ -18,9 +18,9 @@ function Search({
   const [validMess, setValidMess] = useState("");
 
   useEffect(()=>{
-    setKeyWord(localStorage.getItem("keyWord"));
-    onInput(localStorage.getItem("keyWord"));
-    onSetShort(JSON.parse(localStorage.getItem("conditionShort")));
+    setKeyWord(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
+    onInput(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
+    onSetShort(localStorage.getItem("conditionShort") !== null ? JSON.parse(localStorage.getItem("conditionShort")) : false);
     // onSearch()
   }, []);
 
