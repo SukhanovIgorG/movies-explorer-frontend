@@ -9,27 +9,50 @@ function Search({
   onSearch,
   shortState,
   onSetShort,
+  shortStateSave,
+  onSetShortSave,
 }) {
+  let buttonState = savedMoviesStatus ? shortStateSave : shortState;
   const [keyWord, setKeyWord] = useState(keyWordState);
   const [saveKeyWord, setSaveKeyWord] = useState(saveKeyWordState);
+  const [validMess, setValidMess] = useState("");
 
   useEffect(()=>{
     setKeyWord(localStorage.getItem("keyWord"));
-  }, [])
+    onInput(localStorage.getItem("keyWord"));
+    onSetShort(JSON.parse(localStorage.getItem("conditionShort")));
+  }, []);
 
+  const checkValid = (text) => {
+    if (text.length === 0) {
+      setValidMess('введите ключевое слово')
+    }
+    else if (text.length  > 20) {
+      setValidMess('вы ввели слишком длинное название')
+    }
+    else {
+      setValidMess('')
+    }
+  };
 
   const handleShort = () => {
     onSetShort(!shortState);
+    localStorage.setItem("conditionShort", !shortState);
+  };
+  const handleShortSave = () => {
+    onSetShortSave(!shortStateSave);
   };
 
   const handleInput = (v) => {
     setKeyWord(v.target.value);
     onInput(v.target.value);
+    checkValid(v.target.value);
   };
 
   const handleSaveInput = (v) => {
     setSaveKeyWord(v.target.value);
     onSaveInput(v.target.value);
+    checkValid(v.target.value);
   };
 
   const handleSearch = (e) => {
@@ -63,17 +86,18 @@ function Search({
         </button>
         </form>
      
-      {(savedMoviesStatus && String(saveKeyWord).length === 0) || (!savedMoviesStatus && String(keyWord).length === 0) ? (
-        <p className="search__span">Введите ключевое слово</p>
+      {validMess ? (
+        <p className="search__span">{validMess}</p>
       ) : (
         ""
       )}
+
       <div className="search__option-container">
         <button
           className={
-            shortState ? "search__option-button" : "search__option-button_off"
+            buttonState ? "search__option-button" : "search__option-button_off"
           }
-          onClick={handleShort}
+          onClick={ savedMoviesStatus ? handleShortSave : handleShort}
         ></button>
         <span className="search__option-span">Короткометражки</span>
       </div>

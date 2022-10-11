@@ -21,11 +21,14 @@ function Movies({
   onInputSaveKeyWord,
   conditionShort,
   onChangeShort,
+  conditionShortSave,
+  onChangeShortSave,
   onMoreMovies,
   buttonStatus,
   onLike,
   onDelete,
-  onReset
+  onReset,
+  onMount
 }) {
   const navigate = useNavigate();
   let movies = Array.from(onMovies);
@@ -33,6 +36,8 @@ function Movies({
   useEffect(() => {
     if (savedMoviesStatus) {
       onReset();
+    } else if (localStorage.getItem("searchMovies")) {
+      onMount();
     }
 }, [navigate]);
 
@@ -131,6 +136,8 @@ function Movies({
           onSearch={onSearchKeyWord}
           shortState={conditionShort}
           onSetShort={onChangeShort}
+          shortStateSave={conditionShortSave}
+          onSetShortSave={onChangeShortSave}
         />
         {isLoading && <Preloader onLoading={true} message={"поиск..."} />}
         {movies.length === 0 ? (

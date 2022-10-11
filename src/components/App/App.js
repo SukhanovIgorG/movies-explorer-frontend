@@ -47,7 +47,7 @@ function App() {
   const [startCounter, setStartCounter] = useState(0);
   const [moreCounter, setMoreCounter] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [short, setShort] = useState(false);
+  const [short, setShort] = useState(true);
   const [shortSave, setShortSave] = useState(false);
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem("JWT"));
   const [currentUser, setCurrentUser] = useState({});
@@ -74,7 +74,10 @@ function App() {
             }
           )
       };
-    } 
+      console.log('point');
+      setSearchMovies( JSON.parse(localStorage.getItem("searchMovies")) );
+      setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) );
+    };
   }, []) 
 
   useEffect(() => {
@@ -100,21 +103,6 @@ function App() {
           setMySavedMovies(saveMovies.movie);
           setRenderSavedMovies(saveMovies.movie);
           localStorage.setItem("savedMovies", JSON.stringify(saveMovies.movie));
-          setSearchMovies(
-            localStorage.getItem("searchMovies") == null
-              ? []
-              : JSON.parse(localStorage.getItem("searchMovies"))
-          );
-          setRenderMovies(
-            localStorage.getItem("searchMovies") == null
-              ? []
-              : JSON.parse(localStorage.getItem("searchMovies"))
-          );
-          setShort(
-            localStorage.getItem("conditionShort") == null
-              ? false
-              : localStorage.getItem("conditionShort")
-          );
         })
         .catch((err) => {
           console.log(`ошибка. Сообщение: ${err.message}`);
@@ -168,19 +156,10 @@ function App() {
     screenControl();
     setSearchMovies(res);
     setRenderMovies(res.slice(0, startCounter));
-
     localStorage.setItem("searchMovies", JSON.stringify(res));
-    // localStorage.setItem("keyWord", keyWord);
     sliceMovieList();
-  }
-  function handleChangeShort(value) {
-    setShort(value);
-    localStorage.setItem("conditionShort", value);
-  }
-  function handleChangeShortSave(value) {
-    setShortSave(value);
-    localStorage.setItem("conditionShortSave", value);
-  }
+  };
+
   const handleInputKeyWord = (value) => {
     setKeyWord(value);
     localStorage.setItem("keyWord", value);
@@ -273,7 +252,6 @@ function App() {
     setKeyWord("");
     setSaveKeyWord("");
     localStorage.removeItem("JWT");
-    localStorage.removeItem("allMovies")
     localStorage.removeItem("savedMovies");
     localStorage.removeItem("searchMovies");
     localStorage.removeItem("keyWord");
@@ -287,6 +265,10 @@ function App() {
   };
   const onResetSavedMoviesSearch = () => {
     setRenderSavedMovies(mySavedMovies)
+  };
+
+  const onMountLastRes = () => {
+    setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) );
   }
 
   return (
@@ -335,12 +317,15 @@ function App() {
                     onInputKeyWord={handleInputKeyWord}
                     onInputSaveKeyWord={handleInputSaveKeyWord}
                     conditionShort={short}
-                    onChangeShort={handleChangeShort}
+                    onChangeShort={setShort}
+                    conditionShortSave={shortSave}
+                    onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={searchMovies.length === renderMovies.length}
                     onLike={handleLike}
                     onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
+                    onMount={onMountLastRes}
                   />
                 }
               />
@@ -366,8 +351,10 @@ function App() {
                     onSearchKeyWord={handleSearchInSave}
                     onInputKeyWord={handleInputKeyWord}
                     onInputSaveKeyWord={handleInputSaveKeyWord}
-                    conditionShort={shortSave}
-                    onChangeShort={handleChangeShortSave}
+                    conditionShort={short}
+                    onChangeShort={setShort}
+                    conditionShortSave={shortSave}
+                    onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={true}
                     onLike={handleLike}

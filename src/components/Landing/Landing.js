@@ -28,14 +28,9 @@ function Landing( {login, menuOpen, menuClose, menuStatus} ) {
                    : "header__menu-container-burger header__menu-container-burger_clos"
                }
              >
-              <Link to='/f' onClick={menuClose}>
+              <Link to='/' onClick={menuClose}>
                <button
                  className="header__button header__button_landing header__button_hover theme-dark header__button_underline"
-                //  onClick={() => {
-                //   menuClose();
-                //   navigate("/");
-                // }
-                //  }
                >
                  Главная
                </button>
