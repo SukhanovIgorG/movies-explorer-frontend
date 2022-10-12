@@ -141,9 +141,9 @@ function App() {
   };
   const handleSearchInSave = () => {
     setLoading(true);
-    let savedArr = JSON.parse(localStorage.getItem("savedMovies"));
-    if (savedArr) {
-      setRenderSavedMovies(searchMoviesFunc(savedArr, saveKeyWord, shortSave));
+    // let savedArr = JSON.parse(localStorage.getItem("savedMovies"));
+    if (mySavedMovies != []) {
+      setRenderSavedMovies(searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave));
       setLoading(false);
     } else {
       console.log("handleSearchInSave, фильмов не найдено");
