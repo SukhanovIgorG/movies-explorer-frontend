@@ -14,6 +14,7 @@ function Movies({
   menuClose,
   savedMoviesStatus,
   onMovies,
+  onMoviesSave,
   onKeyWord,
   onSaveKeyWord,
   onSearchKeyWord,
@@ -142,7 +143,7 @@ function Movies({
         ) : (
           <MoviesList
             savedMoviesBlock={savedMoviesStatus}
-            movies={onMovies}
+            movies={savedMoviesStatus ? onMoviesSave: onMovies}
             addLike={onLike}
             deleteLike={onDelete}
             render={onMovies}

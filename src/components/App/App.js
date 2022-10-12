@@ -312,6 +312,7 @@ function App() {
                     menuStatus={menuVisible}
                     isLoading={loading}
                     onMovies={renderMovies}
+                    onMoviesSave={renderSavedMovies}
                     savedMoviesStatus={false}
                     onKeyWord={keyWord}
                     onSaveKeyWord={saveKeyWord}
@@ -345,7 +346,8 @@ function App() {
                     menuClose={hendlerCloseMenu}
                     menuStatus={menuVisible}
                     isLoading={loading}
-                    onMovies={renderSavedMovies}
+                    onMovies={renderMovies}
+                    onMoviesSave={renderSavedMovies}
                     savedMoviesStatus={true}
                     onKeyWord={keyWord}
                     onSaveKeyWord={saveKeyWord}
