@@ -28,8 +28,10 @@ import ErrorPage from "../ErrorPage/ErrorPage";
 import Register from "../Register/Register";
 import Landing from "../Landing/Landing";
 import Movies from "../Movies/Movies";
+import MoviesNew from "../MoviesNew/MoviesNew";
+import MoviesSave from "../MoviesSave/MoviesSave";
 import Profille from "../Profile/Profile";
-import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   // CONSTANTS
@@ -223,7 +225,7 @@ function App() {
     addMovies(movie).then((res) => {
       setMySavedMovies([res.movie, ...mySavedMovies]);
       setRenderSavedMovies([res.movie, ...renderSavedMovies]);
-      localStorage.setItem("savedMovies", JSON.stringify([res.movie, ...renderSavedMovies]));
+      localStorage.setItem("savedMovies", JSON.stringify(mySavedMovies));
     })
   };
   const handleDelete = (movie) => {
@@ -308,23 +310,18 @@ function App() {
                 exact
                 path="/movies"
                 element={
-                  <Movies
+                  <MoviesNew
                     menuOpen={hendlerOpenMenu}
                     menuClose={hendlerCloseMenu}
                     menuStatus={menuVisible}
                     isLoading={loading}
                     onMovies={renderMovies}
-                    onMoviesSave={renderSavedMovies}
                     savedMoviesStatus={false}
                     onKeyWord={keyWord}
-                    onSaveKeyWord={saveKeyWord}
                     onSearchKeyWord={handleSearch}
                     onInputKeyWord={handleInputKeyWord}
-                    onInputSaveKeyWord={handleInputSaveKeyWord}
                     conditionShort={short}
                     onChangeShort={setShort}
-                    conditionShortSave={shortSave}
-                    onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={searchMovies.length === renderMovies.length}
                     onLike={handleLike}
@@ -343,26 +340,19 @@ function App() {
                 exact
                 path="/saved-movies"
                 element={
-                  <Movies
+                  <MoviesSave
                     menuOpen={hendlerOpenMenu}
                     menuClose={hendlerCloseMenu}
                     menuStatus={menuVisible}
                     isLoading={loading}
-                    onMovies={renderMovies}
                     onMoviesSave={renderSavedMovies}
                     savedMoviesStatus={true}
-                    onKeyWord={keyWord}
                     onSaveKeyWord={saveKeyWord}
-                    onSearchKeyWord={handleSearchInSave}
-                    onInputKeyWord={handleInputKeyWord}
+                    onSearchSave={handleSearchInSave}
                     onInputSaveKeyWord={handleInputSaveKeyWord}
-                    conditionShort={short}
-                    onChangeShort={setShort}
                     conditionShortSave={shortSave}
                     onChangeShortSave={setShortSave}
-                    onMoreMovies={handleMoreMovies}
-                    buttonStatus={true}
-                    onLike={handleLike}
+                    
                     onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
                   />
@@ -397,3 +387,70 @@ function App() {
 }
 
 export default App;
+
+
+// <Route
+// exact
+// path="/movies"
+// element={
+//   <Movies
+//     menuOpen={hendlerOpenMenu}
+//     menuClose={hendlerCloseMenu}
+//     menuStatus={menuVisible}
+//     isLoading={loading}
+//     onMovies={renderMovies}
+//     onMoviesSave={renderSavedMovies}
+//     savedMoviesStatus={false}
+//     onKeyWord={keyWord}
+//     onSaveKeyWord={saveKeyWord}
+//     onSearchKeyWord={handleSearch}
+//     onInputKeyWord={handleInputKeyWord}
+//     onInputSaveKeyWord={handleInputSaveKeyWord}
+//     conditionShort={short}
+//     onChangeShort={setShort}
+//     conditionShortSave={shortSave}
+//     onChangeShortSave={setShortSave}
+//     onMoreMovies={handleMoreMovies}
+//     buttonStatus={searchMovies.length === renderMovies.length}
+//     onLike={handleLike}
+//     onDelete={handleDelete}
+//     onReset={onResetSavedMoviesSearch}
+//   />
+// }
+// />
+// </Route>
+// <Route
+// exact
+// path="/saved-movies"
+// element={<ProtectedRoute loggedIn={loggedIn} />}
+// >
+// <Route
+// exact
+// path="/saved-movies"
+// element={
+//   <Movies
+//     menuOpen={hendlerOpenMenu}
+//     menuClose={hendlerCloseMenu}
+//     menuStatus={menuVisible}
+//     isLoading={loading}
+//     onMovies={renderMovies}
+//     onMoviesSave={renderSavedMovies}
+//     savedMoviesStatus={true}
+//     onKeyWord={keyWord}
+//     onSaveKeyWord={saveKeyWord}
+//     onSearchKeyWord={handleSearchInSave}
+//     onInputKeyWord={handleInputKeyWord}
+//     onInputSaveKeyWord={handleInputSaveKeyWord}
+//     conditionShort={short}
+//     onChangeShort={setShort}
+//     conditionShortSave={shortSave}
+//     onChangeShortSave={setShortSave}
+//     onMoreMovies={handleMoreMovies}
+//     buttonStatus={true}
+//     onLike={handleLike}
+//     onDelete={handleDelete}
+//     onReset={onResetSavedMoviesSearch}
+//   />
+// }
+// />
+// </Route>
