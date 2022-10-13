@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
-import { 
+import {
   Route,
   Routes,
   BrowserRouter,
-  // useNavigate,
-  // useLocation
- } from "react-router-dom";
+} from "react-router-dom";
 import { getMovies } from "../../utils/MoviesApi";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { addMovies, deleteMovies } from "../../utils/MainApi";
 import { autorization, me, myMovies } from "../../utils/MainApi";
 import {
-  REGURL,
-  SCREENSIZEMIN,
-  SCREENSIZEMAX,
-  MOVIESTARTCOUNTMIN,
-  MOVIESTARTCOUNTMID,
-  MOVIESTARTCOUNTMAX,
-  MOVIEMORECOUNTMIN,
-  MOVIEMORECOUNTMID,
-  MOVIEMORECOUNTMAX,
+  REG_URL,
+  SCREEN_MIN,
+  SCREEN_MAX,
+  MOVIE_MIN,
+  MOVIE_MID,
+  MOVIE_MAX,
+  MOVIE_MORE_MIN,
+  MOVIE_MORE_MID,
+  MOVIE_MORE_MAX,
 } from "../../constants/constans";
 
 // COMPONENTS
@@ -33,8 +31,6 @@ import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
   // CONSTANTS
-  // const navigate = useNavigate();
-  // const location = useLocation();
   let screenWidth = window.innerWidth;
   const jwt = localStorage.getItem("JWT");
   const [allMovies, setAllMovies] = useState([]);
@@ -53,6 +49,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [menuVisible, setMenuVisible] = useState(false);
   const [firstLounch, setFirstLounch] = useState(false);
+  const [catchMessage, setCatchMessage] = useState("");
 
   // MENU OPEN/CLOSE
   const hendlerOpenMenu = () => {
@@ -64,29 +61,47 @@ function App() {
 
   // USE EFFECT
   useEffect(()=>{
+    screenControl();
+    handleSearch();
+    console.log('screen')
+  }, [screenWidth]);
+
+  useEffect(() => {
     if (loggedIn) {
       if (localStorage.getItem("allMovies")) {
-        setAllMovies(JSON.parse(localStorage.getItem("allMovies")))
-        } else {
-          getMovies()
-            .then((apiMovies)=>{
-              localStorage.setItem("allMovies", JSON.stringify(apiMovies));
-              setAllMovies(apiMovies);
-            }
-          )
-      };
-      console.log('point');
-      if (localStorage.getItem("searchMovies")) {setSearchMovies( JSON.parse(localStorage.getItem("searchMovies")) )}
-      if (JSON.parse(localStorage.getItem("searchMovies"))) {setRenderMovies( JSON.parse(localStorage.getItem("searchMovies")) )}
-    };
-  }, [loggedIn]) 
+        setAllMovies(JSON.parse(localStorage.getItem("allMovies")));
+      } else {
+        getMovies()
+          .then((apiMovies) => {
+            localStorage.setItem("allMovies", JSON.stringify(apiMovies));
+            setAllMovies(apiMovies);
+            setCatchMessage("");
+          })
+          .catch(() => {
+            setCatchMessage(
+              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+            );
+          });
+      }
+      console.log("point");
+      if (localStorage.getItem("searchMovies")) {
+        setSearchMovies(JSON.parse(localStorage.getItem("searchMovies")));
+      }
+      if (JSON.parse(localStorage.getItem("searchMovies"))) {
+        setRenderMovies(JSON.parse(localStorage.getItem("searchMovies")));
+      }
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     if (jwt) {
       autorization(jwt)
-        .then(()=>{
-          setLoggedIn(true);
-        })
+      .then(() => {
+        setLoggedIn(true);
+      }).catch(() => {
+        setLoggedIn(false);
+        handleLogOut();
+      })
     } else {
       console.log("jwt не найден");
       setCurrentUser({});
@@ -104,8 +119,12 @@ function App() {
           setMySavedMovies(saveMovies.movie);
           setRenderSavedMovies(saveMovies.movie);
           localStorage.setItem("savedMovies", JSON.stringify(saveMovies.movie));
+          setCatchMessage("");
         })
         .catch((err) => {
+          setCatchMessage(
+            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+          );
           console.log(`ошибка. Сообщение: ${err.message}`);
         });
     } else {
@@ -142,29 +161,39 @@ function App() {
   const handleSearchInSave = () => {
     setLoading(true);
     // let savedArr = JSON.parse(localStorage.getItem("savedMovies"));
-    if (mySavedMovies != []) {
-      setRenderSavedMovies(searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave));
+    // let savedArr = mySavedMovies !== [] ? mySavedMovies : JSON.parse(localStorage.getItem("savedMovies"));
+    if (mySavedMovies !== []) {
+      let res = searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave);
+      // setRenderSavedMovies(searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave));
+      setRenderSavedMovies(res);
       setLoading(false);
+      res.length === 0
+        ? setCatchMessage("ничего не найдено")
+        : setCatchMessage("");
     } else {
       console.log("handleSearchInSave, фильмов не найдено");
+      setCatchMessage("ничего не найдено");
     }
-    localStorage.setItem("saveKeyWord", saveKeyWord);
   };
+
   async function handleSearch() {
     setLoading(true);
     let res = await searchMoviesFunc(allMovies, keyWord, short);
     setLoading(false);
     screenControl();
     setSearchMovies(res);
+    setCatchMessage("");
+    res.length === 0
+      ? setCatchMessage("ничего не найдено")
+      : setCatchMessage("");
     // setRenderMovies(res.slice(0, startCounter));
     if (!firstLounch) {
       setFirstLounch(true);
     } else {
       localStorage.setItem("searchMovies", JSON.stringify(res));
- 
     }
     sliceMovieList();
-  };
+  }
 
   const handleInputKeyWord = (value) => {
     setKeyWord(value);
@@ -176,17 +205,17 @@ function App() {
 
   // SCREEN CONTROLL
   function screenControl() {
-    if (screenWidth < SCREENSIZEMIN) {
-      setStartCounter(MOVIESTARTCOUNTMIN);
-      setMoreCounter(MOVIEMORECOUNTMIN);
+    if (screenWidth < SCREEN_MIN) {
+      setStartCounter(MOVIE_MIN);
+      setMoreCounter(MOVIE_MORE_MIN);
     }
-    if (SCREENSIZEMIN < screenWidth && screenWidth < SCREENSIZEMAX) {
-      setStartCounter(MOVIESTARTCOUNTMID);
-      setMoreCounter(MOVIEMORECOUNTMID);
+    if (SCREEN_MIN < screenWidth && screenWidth < SCREEN_MAX) {
+      setStartCounter(MOVIE_MID);
+      setMoreCounter(MOVIE_MORE_MID);
     }
-    if (SCREENSIZEMAX < screenWidth) {
-      setStartCounter(MOVIESTARTCOUNTMAX);
-      setMoreCounter(MOVIEMORECOUNTMAX);
+    if (SCREEN_MAX < screenWidth) {
+      setStartCounter(MOVIE_MAX);
+      setMoreCounter(MOVIE_MORE_MAX);
     }
   }
   const sliceMovieList = () => {
@@ -206,25 +235,35 @@ function App() {
     setStartCounter(startCounter + moreCounter);
     setRenderMovies(searchMovies.slice(0, startCounter + moreCounter));
   };
-  
+
   // LIKE & DELETE
-  const checkMovieValid = (preMovie)  => {
+  const checkMovieValid = (preMovie) => {
     let movie = preMovie;
-    if (!REGURL.test(preMovie.trailerLink)) {
-      movie.trailerLink = 'https://youtu.be/'
-      return movie
+    if (!REG_URL.test(preMovie.trailerLink)) {
+      movie.trailerLink = "https://youtu.be/";
+      return movie;
     } else {
-      return movie
+      return movie;
     }
   };
 
   const handleLike = (preMovie) => {
     let movie = checkMovieValid(preMovie);
-    addMovies(movie).then((res) => {
-      setMySavedMovies([res.movie, ...mySavedMovies]);
-      setRenderSavedMovies([res.movie, ...renderSavedMovies]);
-      localStorage.setItem("savedMovies", JSON.stringify([res.movie, ...renderSavedMovies]));
-    })
+    addMovies(movie)
+      .then((res) => {
+        setMySavedMovies([res.movie, ...mySavedMovies]);
+        setRenderSavedMovies([res.movie, ...renderSavedMovies]);
+        localStorage.setItem(
+          "savedMovies",
+          JSON.stringify([res.movie, ...renderSavedMovies])
+        );
+        setCatchMessage("");
+      })
+      .catch(() => {
+        setCatchMessage(
+          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+        );
+      });
   };
   const handleDelete = (movie) => {
     const dellMovie = mySavedMovies.find(
@@ -234,17 +273,24 @@ function App() {
     );
     if (dellMovie === undefined) {
     } else {
-      deleteMovies(dellMovie._id).then(() => {
-        const arrWithOutDellMovie = mySavedMovies.filter(
-          (item) => item.movieId !== dellMovie.movieId
-        );
-        setMySavedMovies(arrWithOutDellMovie);
-        setRenderSavedMovies(arrWithOutDellMovie);
-        localStorage.setItem(
-          "savedMovies",
-          JSON.stringify(arrWithOutDellMovie)
-        );
-      });
+      deleteMovies(dellMovie._id)
+        .then(() => {
+          const arrWithOutDellMovie = mySavedMovies.filter(
+            (item) => item.movieId !== dellMovie.movieId
+          );
+          setMySavedMovies(arrWithOutDellMovie);
+          setRenderSavedMovies(arrWithOutDellMovie);
+          localStorage.setItem(
+            "savedMovies",
+            JSON.stringify(arrWithOutDellMovie)
+          );
+          setCatchMessage("");
+        })
+        .catch(() => {
+          setCatchMessage(
+            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+          );
+        });
     }
   };
 
@@ -260,10 +306,10 @@ function App() {
     setKeyWord("");
     setSaveKeyWord("");
     localStorage.removeItem("JWT");
+    localStorage.removeItem("allMovies");
     localStorage.removeItem("savedMovies");
     localStorage.removeItem("searchMovies");
     localStorage.removeItem("keyWord");
-    localStorage.removeItem("saveKeyWord");
     localStorage.removeItem("conditionShort");
     localStorage.removeItem("conditionShortSave");
   };
@@ -272,7 +318,9 @@ function App() {
     setCurrentUser(data);
   };
   const onResetSavedMoviesSearch = () => {
-    setRenderSavedMovies(mySavedMovies)
+    setRenderSavedMovies(mySavedMovies);
+    setSaveKeyWord("");
+    setShortSave(false);
   };
 
   return (
@@ -330,6 +378,8 @@ function App() {
                     onLike={handleLike}
                     onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
+                    onCatch={catchMessage}
+                    onSetCatch={setCatchMessage}
                   />
                 }
               />
@@ -365,6 +415,8 @@ function App() {
                     onLike={handleLike}
                     onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
+                    onCatch={catchMessage}
+                    onSetCatch={setCatchMessage}
                   />
                 }
               />

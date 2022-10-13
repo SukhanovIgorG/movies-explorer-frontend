@@ -18,11 +18,16 @@ function Search({
   const [validMess, setValidMess] = useState("");
 
   useEffect(()=>{
-    setKeyWord(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
-    onInput(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
-    onSetShort(localStorage.getItem("conditionShort") !== null ? JSON.parse(localStorage.getItem("conditionShort")) : false);
-    // onSearch()
-  }, []);
+    if (savedMoviesStatus) {
+      // onSaveInput('')
+      setSaveKeyWord('')
+    } else {
+      setKeyWord(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
+      onInput(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
+      onSetShort(localStorage.getItem("conditionShort") !== null ? JSON.parse(localStorage.getItem("conditionShort")) : false);
+    }
+    setValidMess('')
+  }, [ savedMoviesStatus ]);
 
   const checkValid = (text) => {
     if (text.length === 0) {
@@ -59,6 +64,7 @@ function Search({
   const handleSearch = (e) => {
     e.preventDefault();
     onSearch();
+    checkValid(savedMoviesStatus ? saveKeyWord : keyWord);
   };
 
   return (

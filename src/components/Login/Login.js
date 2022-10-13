@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { REGEMAIL } from "../../constants/constans";
+import { REG_EMAIL } from "../../constants/constans";
 
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -15,9 +15,10 @@ function Login({ onLogin }) {
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [submitActive, setSubmitActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (errorApi || errorEmail || errorPassword) {
+    if (errorEmail || errorPassword) {
       setSubmitActive(false);
     } else {
       setSubmitActive(true);
@@ -25,7 +26,7 @@ function Login({ onLogin }) {
   }, [errorApi, errorEmail, errorPassword]);
 
   useEffect(() => {
-    if (errorApi || errorEmail || errorPassword) {
+    if ( errorEmail || errorPassword) {
       setSubmitActive(false);
     } else {
       setSubmitActive(true);
@@ -37,7 +38,7 @@ function Login({ onLogin }) {
   }, [email, password]);
 
   const validationEmail = (value) => {
-    if (!REGEMAIL.test(value)) {
+    if (!REG_EMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");
@@ -68,6 +69,7 @@ function Login({ onLogin }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (submitActive) {
+      setIsLoading(true)
       login({ email, password })
         .then((data) => {
           localStorage.setItem("JWT", data.token);
@@ -75,9 +77,12 @@ function Login({ onLogin }) {
           setEmail("");
           setPassword("");
           navigate("/movies");
+          setIsLoading(false)
         })
         .catch((err) => {
+          console.log(err)
           setErrorApi(apiErrorController(err));
+          setIsLoading(false);
         });
     } else {
       setErrorApi("Заполните все поля корректными данными");
@@ -105,6 +110,7 @@ function Login({ onLogin }) {
             value={email ? email : ""}
             onChange={handleInputEmail}
             className={errorEmail ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin"}
+            disabled={isLoading}
             placeholder=""
           ></input>
           <span className="dialog__input-error">{errorEmail}</span>
@@ -116,6 +122,7 @@ function Login({ onLogin }) {
             value={password ? password : ""}
             onChange={handleInputPassword}
             className={errorPassword ? "dialog__input dialog__input_type_signin dialog__input_type_error": "dialog__input dialog__input_type_signin"}
+            disabled={isLoading}
             placeholder=""
           ></input>
           <span className="dialog__input-error">{errorPassword}</span>

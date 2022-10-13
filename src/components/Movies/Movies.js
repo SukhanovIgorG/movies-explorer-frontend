@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import Search from "../Search/Search";
@@ -29,18 +29,19 @@ function Movies({
   onLike,
   onDelete,
   onReset,
+  onCatch,
+  onSetCatch,
 }) {
   const navigate = useNavigate();
   let movies = Array.from(onMovies);
 
   useEffect(() => {
-    if (savedMoviesStatus) {
-      onReset();
-    } 
-}, [navigate]);
+    onReset();
+    onSetCatch();
+  }, [savedMoviesStatus]);
 
   return (
-    <>
+    <div className="Movies">
       <Header colorDark={false} loggedIn={true}>
         <div
           className={
@@ -58,11 +59,10 @@ function Movies({
           >
             <button
               className="header__button header__button_hover header__button_landing header__button_underline-not"
-              onClick={()=>{
+              onClick={() => {
                 menuClose();
                 navigate("/");
-              }
-              }
+              }}
             >
               Главная
             </button>
@@ -72,26 +72,26 @@ function Movies({
               }
             >
               <Link to="/movies" onClick={menuClose}>
-              <button
-                className={
-                  savedMoviesStatus
-                    ? "header__button header__button_films header__button_hover"
-                    : "header__button header__button_films header__button_hover header__button_underline"
-                }
-              >
-                Фильмы
-              </button>
+                <button
+                  className={
+                    savedMoviesStatus
+                      ? "header__button header__button_films header__button_hover"
+                      : "header__button header__button_films header__button_hover header__button_underline"
+                  }
+                >
+                  Фильмы
+                </button>
               </Link>
               <Link to="/saved-movies" onClick={menuClose}>
-              <button
-                className={
-                  savedMoviesStatus
-                    ? "header__button header__button_colections header__button_hover header__button_underline"
-                    : "header__button header__button_colections header__button_hover"
-                }
-              >
-                Сохраненные фильмы
-              </button>
+                <button
+                  className={
+                    savedMoviesStatus
+                      ? "header__button header__button_colections header__button_hover header__button_underline"
+                      : "header__button header__button_colections header__button_hover"
+                  }
+                >
+                  Сохраненные фильмы
+                </button>
               </Link>
             </div>
             <div
@@ -100,16 +100,12 @@ function Movies({
               }
             >
               <Link to="/profile" onClick={menuClose}>
-              <button
-                className="header__button header__button_account"
-              >
-                Аккаунт
-              </button>
+                <button className="header__button header__button_account">
+                  Аккаунт
+                </button>
               </Link>
               <Link to="/profile" onClick={menuClose}>
-              <button
-                className="header__button header__button_account-img"
-              ></button>
+                <button className="header__button header__button_account-img"></button>
               </Link>
             </div>
           </div>
@@ -124,7 +120,7 @@ function Movies({
           ></button>
         </div>
       </Header>
-      <main className="Movies">
+      <main className="Movies-main">
         <Search
           savedMoviesStatus={savedMoviesStatus}
           keyWordState={onKeyWord}
@@ -138,12 +134,15 @@ function Movies({
           onSetShortSave={onChangeShortSave}
         />
         {isLoading && <Preloader onLoading={true} message={"поиск..."} />}
+        {onCatch && <Preloader onLoading={false} message={onCatch} />}
+
         {movies.length === 0 ? (
-          <Preloader onLoading={false} message={"ничего не найдено"} />
+          <div></div>
         ) : (
+          // <Preloader onLoading={false} message={"ничего не найдено"} />
           <MoviesList
             savedMoviesBlock={savedMoviesStatus}
-            movies={savedMoviesStatus ? onMoviesSave: onMovies}
+            movies={savedMoviesStatus ? onMoviesSave : onMovies}
             addLike={onLike}
             deleteLike={onDelete}
             render={onMovies}
@@ -160,7 +159,7 @@ function Movies({
         )}
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 

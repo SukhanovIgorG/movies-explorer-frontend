@@ -33,15 +33,22 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
         setIsLiked(true);
       }
     }
-  }, [ movie.nameRU, savedMoviesStatus, isLiked ]);
+  }, [ movie.nameRU, savedMoviesStatus ]);
 
   function handleMovieDelete() {
-    onDelete(movie);
+    console.log('like')
     setIsLiked(false);
+    onDelete(movie);
   }
-  async function handleMovieAdd() {
-    onLike(movie);
-    setIsLiked(true);
+
+  function handleLikeOrDell() {
+    if (isLiked) {
+      setIsLiked(false);
+      onDelete(movie);
+    } else {
+      setIsLiked(true);
+      onLike(movie);
+    }
   }
 
   return (
@@ -65,23 +72,18 @@ function MovieCard({ movie, render, savedMoviesStatus, onLike, onDelete }) {
             setMovie.duration % 60
           }м `}</p>
         </div>
-        <button
+        { savedMoviesStatus && <button
           type="button"
-          className={
-            savedMoviesStatus
-              ? "card__trash"
-              : isLiked
-              ? "card__like card__like_active"
-              : "card__like"
-          }
-          onClick={
-            savedMoviesStatus
-              ? handleMovieDelete
-              : isLiked
-              ? handleMovieDelete
-              : handleMovieAdd
-          }
-        />
+          className="card__trash"
+          onClick={handleMovieDelete}
+        />}
+        { !savedMoviesStatus && <button
+          type="button"
+          className={isLiked
+            ? "card__like card__like_active"
+            : "card__like"}
+          onClick={handleLikeOrDell}
+        />}
       </div>
     </li>
   );

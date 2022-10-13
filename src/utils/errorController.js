@@ -8,6 +8,6 @@ exports.apiErrorController = (err) => {
   } else if (err.status === 400) {
     return('заполните все поля корректными данными')
   } else {
-    return('что-то пошло не так')
+    return('что-то пошло не так, возможно проблема с интернетом')
   }
 }

@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { CurrentUserContext } from "../../context/CurrentUserContext";
 import { updateUser } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { REGEMAIL, REGNAME } from "../../constants/constans";
+import { REG_EMAIL, REG_NAME } from "../../constants/constans";
 
 import Header from "../Header/Header";
 
@@ -23,6 +23,7 @@ function Profille({
   const [errorName, setErrorName] = useState("");
   const [messageDone ,setMessageDone] = useState("")
   const [submitActive, setSubmitActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   useEffect(() => {
@@ -47,7 +48,7 @@ function Profille({
 
 
   const validationEmail = (value) => {
-    if (!REGEMAIL.test(value)) {
+    if (!REG_EMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");
@@ -59,7 +60,7 @@ function Profille({
       setErrorName(
         `Имя не может быть меньше 2 символов, сейчас символов ${value.length}`
       );
-    } else if (!REGNAME.test(value)) {
+    } else if (!REG_NAME.test(value)) {
       setErrorName(`недопустимые символы`);
     } else if (value.length > 30) {
       setErrorName(
@@ -82,14 +83,16 @@ function Profille({
   function handleSubmit(e) {
     e.preventDefault();
     if (submitActive) {
+      setIsLoading(true);
       updateUser({ name, email })
         .then((res) => {
-          console.log(res.user);
           onSetCurrentUser(res.user);
-          setMessageDone('Данные успешно изменены')
+          setMessageDone('Данные успешно изменены');
+          setIsLoading(false);
         })
         .catch((err) => {
           setErrorApi(apiErrorController(err));
+          setIsLoading(false)
         });
     } else {
       if ((name === currentUser.name) && (email === currentUser.email)) {
@@ -189,6 +192,7 @@ function Profille({
                 type="text"
                 value={name ? name : ""}
                 onChange={handleInputName}
+                disabled={isLoading}
                 className={
                   errorName
                     ? "dialog__input dialog__input_type_profille dialog__input_type_error"
@@ -206,6 +210,7 @@ function Profille({
                 type="email"
                 value={email ? email : ""}
                 onChange={handleInputEmail}
+                disabled={isLoading}
                 className={
                   errorEmail
                     ? "dialog__input dialog__input_type_profille dialog__input_type_error"
@@ -231,17 +236,15 @@ function Profille({
               </a>
             </div>
             <div className="dialog__button-container dialog__button-container_type_logout">
-              <a
-                href="../signin"
+              <Link to="/"
                 className="dialog__button-link dialog__button-link_type_logout"
                 onClick={() => {
                   menuClose();
                   logOut();
-                  navigate("/signin");
                 }}
               >
                 Выйти из аккаунта
-              </a>
+              </Link>
             </div>
           </form>
         </div>

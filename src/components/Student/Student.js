@@ -1,6 +1,20 @@
-import photo from "../../image/portfolio-photo.jpg";
-
 function Student() {
+  const year = 1991;
+  const month = 11;
+  const day = 12;
+  const today = new Date();
+  const age = today.getFullYear() - year;
+  let myAge
+  if (
+    (today.getMonth() < month)
+    || ((today.getMonth() === month && today.getDate() < day)) 
+  )
+  {
+    myAge = age - 1 ;
+  } else {
+    myAge = age;
+  }
+
   return (
     <section className="block student">
       <h2 className="block__title">Студент</h2>
@@ -9,14 +23,11 @@ function Student() {
           <div className="student__resume-text">
             <h3 className="student__resume-title">Игорь</h3>
             <h4 className="student__resume-subtitle">
-              Фронтенд-разработчик. 30 лет.
+              Фронтенд-разработчик. {myAge} лет.
             </h4>
             <p className="student__resume-paragraph">
-              Я родился и живу в Саратове, закончил факультет экономики СГУ. У
-              меня есть жена и дочь. Я люблю слушать музыку, а ещё увлекаюсь
-              бегом. Недавно начал кодить. С 2015 года работал в компании «СКБ
-              Контур». После того, как прошёл курс по веб-разработке, начал
-              заниматься фриланс-заказами и ушёл с постоянной работы.
+              Я родился в Липецке, уился и живу в Воронеже, закончил геологический факультет Воронежского Госсударственного Университета.
+              С 2020 года увлекаюсь программированием. После того, как прошёл курс по веб-разработке, занимаюсь фриланс-заказами и нахожусь в поиске постоянной работы.
             </p>
             <a
               className="student__resume-link"
@@ -26,10 +37,8 @@ function Student() {
               GitHub
             </a>
           </div>
-          <img
+          <div
             className="student__resume-photo"
-            src={photo}
-            alt="фото резюме"
           />
         </div>
         <ul className="student__portfolio-list">

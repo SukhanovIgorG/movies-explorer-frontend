@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { register, login } from "../../utils/MainApi";
 import { apiErrorController } from "../../utils/errorController";
-import { REGEMAIL, REGNAME } from "../../constants/constans";
+import { REG_EMAIL, REG_NAME } from "../../constants/constans";
 
 function Register({ onLogin }) {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ function Register({ onLogin }) {
   const [errorName, setErrorName] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [submitActive, setSubmitActive] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (errorApi || errorName || errorEmail || errorPassword) {
@@ -33,7 +34,7 @@ function Register({ onLogin }) {
   }, [errorApi, errorEmail, errorName, errorPassword]);
 
   const validationEmail = (value) => {
-    if (!REGEMAIL.test(value)) {
+    if (!REG_EMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
       setErrorEmail("");
@@ -45,7 +46,7 @@ function Register({ onLogin }) {
       setErrorName(
         `Имя не может быть меньше 2 символов, сейчас символов ${value.length}`
       );
-    } else if (!REGNAME.test(value)) {
+    } else if (!REG_NAME.test(value)) {
       setErrorName(
         `недопустимые символы`
       );
@@ -91,8 +92,10 @@ function Register({ onLogin }) {
     console.log("сабмит");
     e.preventDefault();
     if (submitActive) {
+      setIsLoading(true)
       register({ name, email, password })
         .then(() => {
+          setIsLoading(false);
           login({ email, password })
             .then((data) => {
               localStorage.setItem("JWT", data.token);
@@ -107,6 +110,7 @@ function Register({ onLogin }) {
             });
         })
         .catch((err) => {
+          setIsLoading(true);
           setErrorApi(apiErrorController(err));
         });
     } else {
@@ -135,6 +139,7 @@ function Register({ onLogin }) {
             value={name ? name : ""}
             onChange={handleInputName}
             className={errorName ? "dialog__input dialog__input_type_signin dialog__input_type_error": "dialog__input dialog__input_type_signin"}
+            disabled={isLoading}
             placeholder="Имя"
           ></input>
           <span className="dialog__input-error">{errorName}</span>
@@ -147,6 +152,7 @@ function Register({ onLogin }) {
             onChange={handleInputEmail}
             className={errorEmail ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin" }
             placeholder="E-mail"
+            disabled={isLoading}
           ></input>
           <span className="dialog__input-error">{errorEmail}</span>
           <span className="dialog__input-span dialog__input-span_type_signin">
@@ -158,6 +164,7 @@ function Register({ onLogin }) {
             onChange={handleInputPassword}
             className={errorPassword ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin"}
             placeholder="пароль"
+            disabled={isLoading}
           ></input>
           <span className="dialog__input-error">{errorPassword}</span>
           <span className="dialog__input-error">{errorApi}</span>

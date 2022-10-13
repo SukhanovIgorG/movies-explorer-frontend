@@ -9,3 +9,7 @@
   line-height: 17px;
   color: #434344;
 }
+
+.preloader__container {
+  height: 40px;
+}

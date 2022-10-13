@@ -139,7 +139,7 @@
   visibility: visible;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 1279px) {
   .card__trash {
     height: 16px;
   }

@@ -43,7 +43,7 @@
 .student__resume-paragraph {
   margin: 0;
   padding-top: 26px;
-  max-width: 600px;
+  max-width: 550px;
 
   font-style: normal;
   font-weight: 400;
@@ -75,6 +75,10 @@
   width: 270px;
   height: 327px;
   border-radius: 10px;
+  
+  background-image: url('../../image/portfolio-photo_my.jpeg');
+  background-position: center;
+  background-size: cover;
 }
 
 .student__portfolio-list {
@@ -146,6 +150,12 @@
 }
 
 @media screen and (max-width: 768px) {
+.student__resume-paragraph {
+    max-width: 450px;
+  }
+}
+
+@media screen and (max-width: 768px) {
 
   .student__resume-title {
     font-style: normal;
@@ -166,6 +176,7 @@
   .student__resume-paragraph {
     padding-right: 49px;
     padding-top: 20px;
+    max-width: 320px;
 
     font-weight: 400;
     font-size: 12px;
