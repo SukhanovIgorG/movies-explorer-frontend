@@ -11,8 +11,10 @@
 @import url(./components/Tech/Tech.css);
 @import url(./components/Student/Student.css);
 @import url(./components/Footer/footer.css);
+@import url(./components/Movies/Movies.css);
 @import url(./components/Search/Search.css);
 @import url(./components/MoviesList/Movies-list.css);
 @import url(./components/MovieCard/MovieCard.css);
 @import url(./components/Dialog/Dialog.css);
 @import url(./components/ErrorPage/Error-page.css);
+@import url(./components/Preloader/Preloader.css);

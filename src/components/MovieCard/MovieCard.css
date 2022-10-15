@@ -57,6 +57,7 @@
 }
 
 .card__like_active {
+  background-size: 35px 35px;
   background-image: url('../../image/like_active.svg');
 }
 
@@ -70,6 +71,7 @@
 
   margin-top: 10px;
   margin-bottom: 5px;
+  max-width: 289px;
 
   font-style: normal;
   font-weight: 900;
@@ -137,7 +139,7 @@
   visibility: visible;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 1279px) {
   .card__trash {
     height: 16px;
   }
@@ -165,6 +167,7 @@
   .card__title {
     margin-top: 0;
     margin-bottom: 8px;
+    max-width: 224px;
 
     font-size: 12px;
     line-height: 15px;

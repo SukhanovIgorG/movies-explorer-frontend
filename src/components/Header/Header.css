@@ -1,3 +1,7 @@
+.theme-dark {
+  color: white
+}
+
 .header {
   height: 38px;
 
@@ -14,10 +18,12 @@
 
 .header_type_content {
   background-color: #073042;
+  color: white
 }
 
 .header_type_dialog {
   background-color: #FFF;
+  color: #000000;
 }
 
 .header__menu-container {
@@ -105,7 +111,7 @@
 
   text-align: right;
 
-  color: #000000;
+  /* color: #000000; */
 }
 
 .header__button_colections {
@@ -117,8 +123,8 @@
   /* identical to box height, or 138% */
 
   text-align: right;
-
-  color: #000000; 
+/* 
+  color: #000000;  */
 }
 
 .header__button_account {
@@ -131,8 +137,9 @@
 
   text-align: right;
 
-  color: #000000; 
+  /* color: #000000;  */
 }
+
 
 .header__button_account-img {
   width: 26px;
@@ -142,6 +149,10 @@
   background-image: url(../../image/account.svg);
   background-position: center;
   background-repeat: no-repeat;
+}
+.header__button_account-img_color-dark {
+  width: 10px;
+  background-image: url(../../image/account_color-dark.svg);
 }
 
 
@@ -156,7 +167,7 @@
   align-items: center;
   text-align: right;
 
-  color: #FFFFFF;
+  /* color: #FFFFFF; */
 }
 
 .header__button_sign-in {
@@ -171,7 +182,7 @@
   height: 32px;
   width: 76px;
   border-radius: 3px;
-  color: #000000;
+  /* color: #000000; */
   background-color: #2BE080;
 }
 
@@ -180,6 +191,7 @@
   width: 100%;
   background-color: rgba(0,0,0,0)
 }
+
 
 @media screen and (min-width: 769px) {
   .header__menu-button {
@@ -190,6 +202,9 @@
 
 
 @media screen and (max-width: 768px) {
+  .theme-dark {
+    color: black
+  }
   .header {
     padding: 18px 30px;
   } 
@@ -259,6 +274,9 @@
   .header__menu-button_clos {
     background-image: url(../../image/menu-button.svg);
   }
+  .header__menu-button_clos_color_dark {
+    background-image: url(../../image/menu-button_color-dark.svg);
+  }
 
 
   .header__button:hover {
@@ -315,10 +333,14 @@
     height: 32px;
     width: 76px;
     border-radius: 3px;
-    color: #000000;
+    /* color: #000000; */
     background-color: #2BE080;
   }
 }
+.header__button_underline {
+  text-decoration: underline;
+}
+
 
 @media screen and (max-width: 420px) {
   .header {
@@ -387,4 +409,8 @@
     min-width: 320px;
     max-width: 320px;
   }
+}
+
+.header__button_underline-not {
+  text-decoration: none;
 }
