@@ -1,7 +1,26 @@
-# movies-explorer-frontend
+<h1>movies-explorer-frontend</h1>
 
-Публичная ссылка - https://nomoremovies.nomoredomains.sbs
+<h2>Сервис по поиску фильмов</h2>
 
-Макет - https://www.figma.com/file/fo1gBu1qrGqiGHnNsRPx0I/Diploma-(Copy)?node-id=932%3A3908
+Посмотреть демо можно по ссылке - https://nomoremovies.nomoredomains.sbs
 
-Pull requests level-3 - https://github.com/SukhanovIgorG/movies-explorer-frontend/pull/2
+Выполено в соответствии с макетом - https://www.figma.com/file/fo1gBu1qrGqiGHnNsRPx0I/Diploma-(Copy)?node-id=932%3A3908
+
+Инструкция по развертыванию проекта
+ 1. клонируйте репозиторий на свою машину 
+ - git clone [ссылка на репозиторий]
+ 
+ 2. установите пекеты зависимостей
+ - npm i 
+ (! У вас должен быть установлен Node.js)
+ 
+ 3. Запустите локальный сервер
+ npm run start
+
+<h3>Используемые технологии:</h3>
+  - JavaScript
+  - HTML
+  - CSS
+    1. Grid
+    2. Flex
+  - React.js
