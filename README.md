@@ -21,6 +21,4 @@
   - JavaScript
   - HTML
   - CSS
-    1. Grid
-    2. Flex
   - React.js
