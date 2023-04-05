@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "servis for movies",
   "main": "index.js",
+  "homepage": "http://SukhanovIgorG.github.io/movies-explorer-frontend/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SukhanovIgorG/movies-explorer-frontend.git"
