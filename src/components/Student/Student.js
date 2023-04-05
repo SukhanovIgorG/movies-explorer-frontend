@@ -4,13 +4,12 @@ function Student() {
   const day = 12;
   const today = new Date();
   const age = today.getFullYear() - year;
-  let myAge
+  let myAge;
   if (
-    (today.getMonth() < month)
-    || ((today.getMonth() === month && today.getDate() < day)) 
-  )
-  {
-    myAge = age - 1 ;
+    today.getMonth() < month ||
+    (today.getMonth() === month && today.getDate() < day)
+  ) {
+    myAge = age - 1;
   } else {
     myAge = age;
   }
@@ -23,23 +22,25 @@ function Student() {
           <div className="student__resume-text">
             <h3 className="student__resume-title">Игорь</h3>
             <h4 className="student__resume-subtitle">
-              Фронтенд-разработчик. {myAge} лет.
+              Фронтенд-разработчик. {myAge} год.
             </h4>
             <p className="student__resume-paragraph">
-              Я родился в Липецке, уился и живу в Воронеже, закончил геологический факультет Воронежского Госсударственного Университета.
-              С 2020 года увлекаюсь программированием. После того, как прошёл курс по веб-разработке, занимаюсь фриланс-заказами и нахожусь в поиске постоянной работы.
+              Я родился в Липецке, уился и живу в Воронеже, закончил
+              геологический факультет Воронежского Госсударственного
+              Университета. С 2020 года увлекаюсь программированием. После того,
+              как прошёл курс по веб-разработке, занимаюсь фриланс-заказами и
+              нахожусь в поиске постоянной работы.
             </p>
             <a
               className="student__resume-link"
               href="https://github.com/SukhanovIgorG"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               GitHub
             </a>
           </div>
-          <div
-            className="student__resume-photo"
-          />
+          <div className="student__resume-photo" />
         </div>
         <ul className="student__portfolio-list">
           <p className="student__portfolio-title">Портфолио</p>
@@ -47,14 +48,16 @@ function Student() {
             <a
               className="student__portfolio-link"
               href="https://sukhanovigorg.github.io/how-to-learn/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               Статичный сайт
             </a>
             <a
               className="student__portfolio-icon"
               href="https://sukhanovigorg.github.io/how-to-learn/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               ↗
             </a>
@@ -63,14 +66,16 @@ function Student() {
             <a
               className="student__portfolio-link"
               href="https://sukhanovigorg.github.io/russian-travel/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               Адаптивный сайт
             </a>
             <a
               className="student__portfolio-icon"
               href="https://sukhanovigorg.github.io/russian-travel/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               ↗
             </a>
@@ -79,14 +84,16 @@ function Student() {
             <a
               className="student__portfolio-link"
               href="https://sukhanovigorg.github.io/mesto-react/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               Одностраничное приложение
             </a>
             <a
               className="student__portfolio-icon"
               href="https://sukhanovigorg.github.io/mesto-react/"
-              target="_blank" rel="noreferrer"
+              target="_blank"
+              rel="noreferrer"
             >
               ↗
             </a>

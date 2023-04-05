@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from 'react';
 
 function Search({
   savedMoviesStatus,
@@ -15,35 +15,44 @@ function Search({
   let buttonState = savedMoviesStatus ? shortStateSave : shortState;
   const [keyWord, setKeyWord] = useState(keyWordState);
   const [saveKeyWord, setSaveKeyWord] = useState(saveKeyWordState);
-  const [validMess, setValidMess] = useState("");
+  const [validMess, setValidMess] = useState('');
 
-  useEffect(()=>{
+  useEffect(() => {
     if (savedMoviesStatus) {
-      // onSaveInput('')
-      setSaveKeyWord('')
+      setSaveKeyWord('');
     } else {
-      setKeyWord(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
-      onInput(localStorage.getItem("keyWord") !== null ? localStorage.getItem("keyWord") : '');
-      onSetShort(localStorage.getItem("conditionShort") !== null ? JSON.parse(localStorage.getItem("conditionShort")) : false);
+      setKeyWord(
+        localStorage.getItem('keyWord') !== null
+          ? localStorage.getItem('keyWord')
+          : ''
+      );
+      onInput(
+        localStorage.getItem('keyWord') !== null
+          ? localStorage.getItem('keyWord')
+          : ''
+      );
+      onSetShort(
+        localStorage.getItem('conditionShort') !== null
+          ? JSON.parse(localStorage.getItem('conditionShort'))
+          : false
+      );
     }
-    setValidMess('')
-  }, [ savedMoviesStatus ]);
+    setValidMess('');
+  }, [savedMoviesStatus]);
 
   const checkValid = (text) => {
     if (text.length === 0) {
-      setValidMess('введите ключевое слово')
-    }
-    else if (text.length  > 20) {
-      setValidMess('вы ввели слишком длинное название')
-    }
-    else {
-      setValidMess('')
+      setValidMess('введите ключевое слово');
+    } else if (text.length > 20) {
+      setValidMess('вы ввели слишком длинное название');
+    } else {
+      setValidMess('');
     }
   };
 
   const handleShort = () => {
     onSetShort(!shortState);
-    localStorage.setItem("conditionShort", !shortState);
+    localStorage.setItem('conditionShort', !shortState);
   };
   const handleShortSave = () => {
     onSetShortSave(!shortStateSave);
@@ -69,8 +78,11 @@ function Search({
 
   return (
     <section className="search">
-      
-        <form className="search__area" noValidate onSubmit={handleSearch}>
+      <form
+        className="search__area"
+        noValidate
+        onSubmit={handleSearch}
+      >
         <input
           className="search__input"
           type="string"
@@ -80,31 +92,30 @@ function Search({
             savedMoviesStatus
               ? saveKeyWord
                 ? saveKeyWord
-                : ""
+                : ''
               : keyWord
               ? keyWord
-              : ""
+              : ''
           }
           onChange={savedMoviesStatus ? handleSaveInput : handleInput}
           required
         />
-        <button className="search__button" onClick={handleSearch}>
+        <button
+          className="search__button"
+          onClick={handleSearch}
+        >
           Найти
         </button>
-        </form>
-     
-      {validMess ? (
-        <p className="search__span">{validMess}</p>
-      ) : (
-        ""
-      )}
+      </form>
+
+      {validMess ? <p className="search__span">{validMess}</p> : ''}
 
       <div className="search__option-container">
         <button
           className={
-            buttonState ? "search__option-button" : "search__option-button_off"
+            buttonState ? 'search__option-button' : 'search__option-button_off'
           }
-          onClick={ savedMoviesStatus ? handleShortSave : handleShort}
+          onClick={savedMoviesStatus ? handleShortSave : handleShort}
         ></button>
         <span className="search__option-span">Короткометражки</span>
       </div>

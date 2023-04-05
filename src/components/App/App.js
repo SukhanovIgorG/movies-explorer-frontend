@@ -160,11 +160,8 @@ function App() {
   };
   const handleSearchInSave = () => {
     setLoading(true);
-    // let savedArr = JSON.parse(localStorage.getItem("savedMovies"));
-    // let savedArr = mySavedMovies !== [] ? mySavedMovies : JSON.parse(localStorage.getItem("savedMovies"));
     if (mySavedMovies !== []) {
       let res = searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave);
-      // setRenderSavedMovies(searchMoviesFunc(mySavedMovies, saveKeyWord, shortSave));
       setRenderSavedMovies(res);
       setLoading(false);
       res.length === 0
@@ -186,7 +183,6 @@ function App() {
     res.length === 0
       ? setCatchMessage("ничего не найдено")
       : setCatchMessage("");
-    // setRenderMovies(res.slice(0, startCounter));
     if (!firstLounch) {
       setFirstLounch(true);
     } else {
