@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.movie.nomoredomains.sbs";
+export const BASE_URL = 'http://localhost:9999';
 
 const checkResponse = (res) => {
   if (res.ok) {
@@ -7,90 +7,84 @@ const checkResponse = (res) => {
   return Promise.reject(res);
 };
 
-export const register = ({ name, email, password }) => {
+export const register = ({name, email, password}) => {
   return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       name: name,
       email: email,
       password: password,
     }),
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
-export const login = ({ email, password }) => {
+export const login = ({email, password}) => {
   return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       email: email,
       password: password,
     }),
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 // проверка мейла
 export const me = () => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
     },
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 // проверка токена
 export const autorization = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
-export const updateUser = ( {name, email}) => {
+export const updateUser = ({name, email}) => {
   return fetch(`${BASE_URL}/users/me`, {
-    method: "PATCH",
+    method: 'PATCH',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
     },
     body: JSON.stringify({
       name: name,
       email: email,
     }),
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const myMovies = () => {
   return fetch(`${BASE_URL}/movies`, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
     },
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const addMovies = (movie) => {
   return fetch(`${BASE_URL}/movies`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
     },
     body: JSON.stringify({
       country: movie.country,
@@ -105,21 +99,18 @@ export const addMovies = (movie) => {
       nameRU: movie.nameRU,
       nameEN: movie.nameEN,
     }),
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const deleteMovies = (_id) => {
   return fetch(`${BASE_URL}/movies/${_id}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("JWT")}`,
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
     },
-  })
-    .then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
-
 
 // .then((res) => {
 //   return res;

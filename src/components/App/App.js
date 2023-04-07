@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
-import {
-  Route,
-  Routes,
-  BrowserRouter,
-} from "react-router-dom";
-import { getMovies } from "../../utils/MoviesApi";
-import { CurrentUserContext } from "../../context/CurrentUserContext";
-import { addMovies, deleteMovies } from "../../utils/MainApi";
-import { autorization, me, myMovies } from "../../utils/MainApi";
+import {useState, useEffect} from 'react';
+import {Route, Routes, HashRouter} from 'react-router-dom';
+import {getDatabase} from 'firebase/database';
+
+import {app} from '../../index';
+import {getMovies} from '../../utils/MoviesApi';
+import {CurrentUserContext} from '../../context/CurrentUserContext';
+import {addMovies, deleteMovies} from '../../utils/MainApi';
+import {autorization, me, myMovies} from '../../utils/MainApi';
 import {
   REG_URL,
   SCREEN_MIN,
@@ -18,38 +17,45 @@ import {
   MOVIE_MORE_MIN,
   MOVIE_MORE_MID,
   MOVIE_MORE_MAX,
-} from "../../constants/constans";
+} from '../../constants/constans';
 
 // COMPONENTS
-import Login from "../Login/Login";
-import ErrorPage from "../ErrorPage/ErrorPage";
-import Register from "../Register/Register";
-import Landing from "../Landing/Landing";
-import Movies from "../Movies/Movies";
-import Profille from "../Profile/Profile";
-import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import Login from '../Login/Login';
+import ErrorPage from '../ErrorPage/ErrorPage';
+import Register from '../Register/Register';
+import Landing from '../Landing/Landing';
+import Movies from '../Movies/Movies';
+import Profille from '../Profile/Profile';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 function App() {
   // CONSTANTS
   let screenWidth = window.innerWidth;
-  const jwt = localStorage.getItem("JWT");
+  const jwt = localStorage.getItem('JWT');
   const [allMovies, setAllMovies] = useState([]);
   const [renderMovies, setRenderMovies] = useState([]);
   const [renderSavedMovies, setRenderSavedMovies] = useState([]);
   const [searchMovies, setSearchMovies] = useState([]);
   const [mySavedMovies, setMySavedMovies] = useState([]);
-  const [keyWord, setKeyWord] = useState("");
-  const [saveKeyWord, setSaveKeyWord] = useState("");
+  const [keyWord, setKeyWord] = useState('');
+  const [saveKeyWord, setSaveKeyWord] = useState('');
   const [startCounter, setStartCounter] = useState(0);
   const [moreCounter, setMoreCounter] = useState(0);
   const [loading, setLoading] = useState(false);
   const [short, setShort] = useState(true);
   const [shortSave, setShortSave] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(localStorage.getItem("JWT"));
+  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('JWT'));
   const [currentUser, setCurrentUser] = useState({});
   const [menuVisible, setMenuVisible] = useState(false);
   const [firstLounch, setFirstLounch] = useState(false);
-  const [catchMessage, setCatchMessage] = useState("");
+  const [catchMessage, setCatchMessage] = useState('');
+
+  useEffect(() => {
+    return () => {
+      const db = getDatabase(app);
+      console.log('db :>> ', db);
+    };
+  });
 
   // MENU OPEN/CLOSE
   const hendlerOpenMenu = () => {
@@ -60,77 +66,77 @@ function App() {
   };
 
   // USE EFFECT
-  useEffect(()=>{
+  useEffect(() => {
     screenControl();
     handleSearch();
-    console.log('screen')
   }, [screenWidth]);
 
   useEffect(() => {
     if (loggedIn) {
-      if (localStorage.getItem("allMovies")) {
-        setAllMovies(JSON.parse(localStorage.getItem("allMovies")));
+      if (localStorage.getItem('allMovies')) {
+        setAllMovies(JSON.parse(localStorage.getItem('allMovies')));
       } else {
         getMovies()
           .then((apiMovies) => {
-            localStorage.setItem("allMovies", JSON.stringify(apiMovies));
+            localStorage.setItem('allMovies', JSON.stringify(apiMovies));
             setAllMovies(apiMovies);
-            setCatchMessage("");
+            setCatchMessage('');
           })
           .catch(() => {
             setCatchMessage(
-              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+              'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
             );
           });
       }
-      console.log("point");
-      if (localStorage.getItem("searchMovies")) {
-        setSearchMovies(JSON.parse(localStorage.getItem("searchMovies")));
+      console.log('point');
+      if (localStorage.getItem('searchMovies')) {
+        setSearchMovies(JSON.parse(localStorage.getItem('searchMovies')));
       }
-      if (JSON.parse(localStorage.getItem("searchMovies"))) {
-        setRenderMovies(JSON.parse(localStorage.getItem("searchMovies")));
+      if (JSON.parse(localStorage.getItem('searchMovies'))) {
+        setRenderMovies(JSON.parse(localStorage.getItem('searchMovies')));
       }
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    if (jwt) {
-      autorization(jwt)
-      .then(() => {
-        setLoggedIn(true);
-      }).catch(() => {
-        setLoggedIn(false);
-        handleLogOut();
-      })
-    } else {
-      console.log("jwt не найден");
-      setCurrentUser({});
-      setLoggedIn(false);
-      handleLogOut();
-    }
-  }, [jwt]);
+  // useEffect(() => {
+  //   if (jwt) {
+  //     autorization(jwt)
+  //       .then(() => {
+  //         setLoggedIn(true);
+  //       })
+  //       .catch(() => {
+  //         setLoggedIn(false);
+  //         handleLogOut();
+  //       });
+  //   } else {
+  //     console.log('jwt не найден');
+  //     setCurrentUser({});
+  //     setLoggedIn(false);
+  //     handleLogOut();
+  //   }
+  // }, [jwt]);
 
-  useEffect(() => {
-    if (loggedIn) {
-      screenControl();
-      Promise.all([me(), myMovies()])
-        .then(([user, saveMovies]) => {
-          setCurrentUser(user.user);
-          setMySavedMovies(saveMovies.movie);
-          setRenderSavedMovies(saveMovies.movie);
-          localStorage.setItem("savedMovies", JSON.stringify(saveMovies.movie));
-          setCatchMessage("");
-        })
-        .catch((err) => {
-          setCatchMessage(
-            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
-          );
-          console.log(`ошибка. Сообщение: ${err.message}`);
-        });
-    } else {
-      console.log("авторизация не выполнена");
-    }
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     screenControl();
+  //     Promise.all([me(), myMovies()])
+  //       .then(([user, saveMovies]) => {
+  //         setCurrentUser(user.user);
+  //         setMySavedMovies(saveMovies.movie);
+  //         setRenderSavedMovies(saveMovies.movie);
+  //         localStorage.setItem('savedMovies', JSON.stringify(saveMovies.movie));
+  //         setCatchMessage('');
+  //       })
+  //       .catch((err) => {
+  //         setCatchMessage(
+  //           'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+  //         );
+  //         console.log(`ошибка. Сообщение: ${err.message}`);
+  //       });
+  //   } else {
+  //     console.log('авторизация не выполнена');
+  //   }
+  // }, [loggedIn]);
 
   useEffect(() => {
     sliceMovieList();
@@ -145,7 +151,7 @@ function App() {
   }, [shortSave]);
 
   // SEARC & INPUTS
-  const searchMoviesFunc = (dataMovies = [], name = "", short = false) => {
+  const searchMoviesFunc = (dataMovies = [], name = '', short = false) => {
     let arrMovies = dataMovies ? Array.from(dataMovies) : [];
     if (short) {
       let shortMovies = arrMovies.filter((item) => item.duration < 41);
@@ -165,11 +171,11 @@ function App() {
       setRenderSavedMovies(res);
       setLoading(false);
       res.length === 0
-        ? setCatchMessage("ничего не найдено")
-        : setCatchMessage("");
+        ? setCatchMessage('ничего не найдено')
+        : setCatchMessage('');
     } else {
-      console.log("handleSearchInSave, фильмов не найдено");
-      setCatchMessage("ничего не найдено");
+      console.log('handleSearchInSave, фильмов не найдено');
+      setCatchMessage('ничего не найдено');
     }
   };
 
@@ -179,21 +185,21 @@ function App() {
     setLoading(false);
     screenControl();
     setSearchMovies(res);
-    setCatchMessage("");
+    setCatchMessage('');
     res.length === 0
-      ? setCatchMessage("ничего не найдено")
-      : setCatchMessage("");
+      ? setCatchMessage('ничего не найдено')
+      : setCatchMessage('');
     if (!firstLounch) {
       setFirstLounch(true);
     } else {
-      localStorage.setItem("searchMovies", JSON.stringify(res));
+      localStorage.setItem('searchMovies', JSON.stringify(res));
     }
     sliceMovieList();
   }
 
   const handleInputKeyWord = (value) => {
     setKeyWord(value);
-    localStorage.setItem("keyWord", value);
+    localStorage.setItem('keyWord', value);
   };
   const handleInputSaveKeyWord = (value) => {
     setSaveKeyWord(value);
@@ -236,7 +242,7 @@ function App() {
   const checkMovieValid = (preMovie) => {
     let movie = preMovie;
     if (!REG_URL.test(preMovie.trailerLink)) {
-      movie.trailerLink = "https://youtu.be/";
+      movie.trailerLink = 'https://youtu.be/';
       return movie;
     } else {
       return movie;
@@ -250,14 +256,14 @@ function App() {
         setMySavedMovies([res.movie, ...mySavedMovies]);
         setRenderSavedMovies([res.movie, ...renderSavedMovies]);
         localStorage.setItem(
-          "savedMovies",
+          'savedMovies',
           JSON.stringify([res.movie, ...renderSavedMovies])
         );
-        setCatchMessage("");
+        setCatchMessage('');
       })
       .catch(() => {
         setCatchMessage(
-          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+          'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
         );
       });
   };
@@ -277,14 +283,14 @@ function App() {
           setMySavedMovies(arrWithOutDellMovie);
           setRenderSavedMovies(arrWithOutDellMovie);
           localStorage.setItem(
-            "savedMovies",
+            'savedMovies',
             JSON.stringify(arrWithOutDellMovie)
           );
-          setCatchMessage("");
+          setCatchMessage('');
         })
         .catch(() => {
           setCatchMessage(
-            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз"
+            'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
           );
         });
     }
@@ -299,15 +305,15 @@ function App() {
     setCurrentUser({});
     setSearchMovies([]);
     setMySavedMovies([]);
-    setKeyWord("");
-    setSaveKeyWord("");
-    localStorage.removeItem("JWT");
-    localStorage.removeItem("allMovies");
-    localStorage.removeItem("savedMovies");
-    localStorage.removeItem("searchMovies");
-    localStorage.removeItem("keyWord");
-    localStorage.removeItem("conditionShort");
-    localStorage.removeItem("conditionShortSave");
+    setKeyWord('');
+    setSaveKeyWord('');
+    localStorage.removeItem('JWT');
+    localStorage.removeItem('allMovies');
+    localStorage.removeItem('savedMovies');
+    localStorage.removeItem('searchMovies');
+    localStorage.removeItem('keyWord');
+    localStorage.removeItem('conditionShort');
+    localStorage.removeItem('conditionShortSave');
   };
 
   const setCurrentUserHandler = (data) => {
@@ -315,21 +321,37 @@ function App() {
   };
   const onResetSavedMoviesSearch = () => {
     setRenderSavedMovies(mySavedMovies);
-    setSaveKeyWord("");
+    setSaveKeyWord('');
     setShortSave(false);
   };
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route
               path="/signup"
-              element={<Register onLogin={handlerLogin} />}
+              element={
+                <Register
+                  setCurrentUser={setCurrentUser}
+                  onLogin={handlerLogin}
+                />
+              }
             />
-            <Route path="/signin" element={<Login onLogin={handlerLogin} />} />
-            <Route path="/404" element={<ErrorPage />} />
+            <Route
+              path="/signin"
+              element={
+                <Login
+                  setCurrentUser={setCurrentUser}
+                  onLogin={handlerLogin}
+                />
+              }
+            />
+            <Route
+              path="/404"
+              element={<ErrorPage />}
+            />
             <Route
               exact
               path="/"
@@ -436,9 +458,12 @@ function App() {
                 }
               />
             </Route>
-            <Route path="/*" element={<ErrorPage />} />
+            <Route
+              path="/*"
+              element={<ErrorPage />}
+            />
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </CurrentUserContext.Provider>
     </div>
   );

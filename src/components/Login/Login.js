@@ -1,21 +1,25 @@
-import headerLogo from "../../image/header-logo.svg";
+import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
 
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "../../utils/MainApi";
-import { apiErrorController } from "../../utils/errorController";
-import { REG_EMAIL } from "../../constants/constans";
+import headerLogo from '../../image/header-logo.svg';
 
-function Login({ onLogin }) {
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {login} from '../../utils/MainApi';
+import {apiErrorController} from '../../utils/errorController';
+import {REG_EMAIL} from '../../constants/constans';
+
+function Login({onLogin, setCurrentUser}) {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorApi, setErrorApi] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorApi, setErrorApi] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
   const [submitActive, setSubmitActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const auth = getAuth();
 
   useEffect(() => {
     if (errorEmail || errorPassword) {
@@ -26,7 +30,7 @@ function Login({ onLogin }) {
   }, [errorApi, errorEmail, errorPassword]);
 
   useEffect(() => {
-    if ( errorEmail || errorPassword) {
+    if (errorEmail || errorPassword) {
       setSubmitActive(false);
     } else {
       setSubmitActive(true);
@@ -34,14 +38,14 @@ function Login({ onLogin }) {
   }, []);
 
   useEffect(() => {
-    setErrorApi("");
+    setErrorApi('');
   }, [email, password]);
 
   const validationEmail = (value) => {
     if (!REG_EMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
-      setErrorEmail("");
+      setErrorEmail('');
     }
   };
 
@@ -49,7 +53,7 @@ function Login({ onLogin }) {
     if (value.length < 1) {
       setErrorPassword(`Пароль не может быть пустым`);
     } else {
-      setErrorPassword("");
+      setErrorPassword('');
     }
   };
 
@@ -69,23 +73,43 @@ function Login({ onLogin }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (submitActive) {
-      setIsLoading(true)
-      login({ email, password })
-        .then((data) => {
-          localStorage.setItem("JWT", data.token);
+      setIsLoading(true);
+      // login({email, password})
+      //   .then((data) => {
+      //     localStorage.setItem('JWT', data.token);
+      //     handleLogin(true);
+      //     setEmail('');
+      //     setPassword('');
+      //     navigate('/movies');
+      //     setIsLoading(false);
+      //   })
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          setCurrentUser(user);
+          localStorage.setItem('JWT', user.accessToken);
           handleLogin(true);
-          setEmail("");
-          setPassword("");
-          navigate("/movies");
-          setIsLoading(false)
+          setEmail('');
+          setPassword('');
+          navigate('/movies');
+          setIsLoading(false);
         })
-        .catch((err) => {
-          console.log(err)
-          setErrorApi(apiErrorController(err));
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorMessage :>> ', errorCode, errorMessage);
+          setErrorApi(apiErrorController(error));
           setIsLoading(false);
         });
+
+      // .catch((err) => {
+      //   console.log(err);
+      //   setErrorApi(apiErrorController(err));
+      //   setIsLoading(false);
+      // });
     } else {
-      setErrorApi("Заполните все поля корректными данными");
+      setErrorApi('Заполните все поля корректными данными');
     }
   }
 
@@ -96,7 +120,7 @@ function Login({ onLogin }) {
           className="header__logo heder__logo_type_signin"
           src={headerLogo}
           alt="логотип"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         />
         <h2 className="dialog__header dialog__header_type_auth">
           Рады видеть!
@@ -107,9 +131,13 @@ function Login({ onLogin }) {
           </span>
           <input
             type="email"
-            value={email ? email : ""}
+            value={email ? email : ''}
             onChange={handleInputEmail}
-            className={errorEmail ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin"}
+            className={
+              errorEmail
+                ? 'dialog__input dialog__input_type_signin dialog__input_type_error'
+                : 'dialog__input dialog__input_type_signin'
+            }
             disabled={isLoading}
             placeholder=""
           ></input>
@@ -119,9 +147,13 @@ function Login({ onLogin }) {
           </span>
           <input
             type="password"
-            value={password ? password : ""}
+            value={password ? password : ''}
             onChange={handleInputPassword}
-            className={errorPassword ? "dialog__input dialog__input_type_signin dialog__input_type_error": "dialog__input dialog__input_type_signin"}
+            className={
+              errorPassword
+                ? 'dialog__input dialog__input_type_signin dialog__input_type_error'
+                : 'dialog__input dialog__input_type_signin'
+            }
             disabled={isLoading}
             placeholder=""
           ></input>
@@ -131,8 +163,8 @@ function Login({ onLogin }) {
           <button
             className={
               submitActive
-                ? "dialog__button dialog__button_type_log"
-                : "dialog__button dialog__button_type_log dialog__button_type_log-inactive"
+                ? 'dialog__button dialog__button_type_log'
+                : 'dialog__button dialog__button_type_log dialog__button_type_log-inactive'
             }
           >
             Войти
@@ -141,7 +173,7 @@ function Login({ onLogin }) {
             Еще не зарегистрированы?
             <button
               className="dialog__button-link"
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate('/signup')}
             >
               Регистрация
             </button>

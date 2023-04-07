@@ -1,20 +1,22 @@
-import headerLogo from "../../image/header-logo.svg";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { register, login } from "../../utils/MainApi";
-import { apiErrorController } from "../../utils/errorController";
-import { REG_EMAIL, REG_NAME } from "../../constants/constans";
+import headerLogo from '../../image/header-logo.svg';
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {register, login} from '../../utils/MainApi';
+import {apiErrorController} from '../../utils/errorController';
+import {REG_EMAIL, REG_NAME} from '../../constants/constans';
 
-function Register({ onLogin }) {
+import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+
+function Register({onLogin}) {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorApi, setErrorApi] = useState("");
-  const [errorEmail, setErrorEmail] = useState("");
-  const [errorName, setErrorName] = useState("");
-  const [errorPassword, setErrorPassword] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorApi, setErrorApi] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
+  const [errorName, setErrorName] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
   const [submitActive, setSubmitActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -37,7 +39,7 @@ function Register({ onLogin }) {
     if (!REG_EMAIL.test(value)) {
       setErrorEmail(`${value} не является электронной почтой`);
     } else {
-      setErrorEmail("");
+      setErrorEmail('');
     }
   };
 
@@ -47,15 +49,13 @@ function Register({ onLogin }) {
         `Имя не может быть меньше 2 символов, сейчас символов ${value.length}`
       );
     } else if (!REG_NAME.test(value)) {
-      setErrorName(
-        `недопустимые символы`
-      );
-    }else if (value.length > 30) {
+      setErrorName(`недопустимые символы`);
+    } else if (value.length > 30) {
       setErrorName(
         `Имя не может быть длиннее 30 символов, сейчас символов ${value.length}`
       );
     } else {
-      setErrorName("");
+      setErrorName('');
     }
   };
 
@@ -63,7 +63,7 @@ function Register({ onLogin }) {
     if (value.length < 1) {
       setErrorPassword(`Пароль не может быть пустым`);
     } else {
-      setErrorPassword("");
+      setErrorPassword('');
     }
   };
 
@@ -72,7 +72,7 @@ function Register({ onLogin }) {
   }
 
   useEffect(() => {
-    setErrorApi("");
+    setErrorApi('');
   }, [email, name, password]);
 
   function handleInputName(e) {
@@ -89,32 +89,52 @@ function Register({ onLogin }) {
   }
 
   function handleSubmit(e) {
-    console.log("сабмит");
+    console.log('сабмит');
     e.preventDefault();
     if (submitActive) {
-      setIsLoading(true)
-      register({ name, email, password })
-        .then(() => {
+      setIsLoading(true);
+      // register({ name, email, password })
+      //   .then(() => {
+      //     setIsLoading(false);
+      //     login({ email, password })
+      //       .then((data) => {
+      //         localStorage.setItem("JWT", data.token);
+      //         handleLogin(true);
+      //         setName("");
+      //         setEmail("");
+      //         setPassword("");
+      //         navigate("/movies");
+      //       })
+      //       .catch((err) => {
+      //         setErrorApi(apiErrorController(err));
+      //       });
+      //   })
+      //   .catch((err) => {
+      //     setIsLoading(true);
+      //     setErrorApi(apiErrorController(err));
+      //   });
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log('user :>> ', user);
           setIsLoading(false);
-          login({ email, password })
-            .then((data) => {
-              localStorage.setItem("JWT", data.token);
-              handleLogin(true);
-              setName("");
-              setEmail("");
-              setPassword("");
-              navigate("/movies");
-            })
-            .catch((err) => {
-              setErrorApi(apiErrorController(err));
-            });
+          localStorage.setItem('JWT', user.accessToken);
+          handleLogin(true);
+          setName('');
+          setEmail('');
+          setPassword('');
+          navigate('/movies');
         })
-        .catch((err) => {
-          setIsLoading(true);
-          setErrorApi(apiErrorController(err));
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorMessage :>> ', errorCode, errorMessage);
+          // ..
         });
     } else {
-      setErrorApi("Заполните все поля корректными данными");
+      setErrorApi('Заполните все поля корректными данными');
     }
   }
 
@@ -125,7 +145,7 @@ function Register({ onLogin }) {
           className="header__logo header__logo_type_signin"
           src={headerLogo}
           alt="логотип"
-          onClick={() => navigate("/")}
+          onClick={() => navigate('/')}
         />
         <h2 className="dialog__header dialog__header_type_auth">
           Добро пожаловать!
@@ -136,9 +156,13 @@ function Register({ onLogin }) {
           </span>
           <input
             type="name"
-            value={name ? name : ""}
+            value={name ? name : ''}
             onChange={handleInputName}
-            className={errorName ? "dialog__input dialog__input_type_signin dialog__input_type_error": "dialog__input dialog__input_type_signin"}
+            className={
+              errorName
+                ? 'dialog__input dialog__input_type_signin dialog__input_type_error'
+                : 'dialog__input dialog__input_type_signin'
+            }
             disabled={isLoading}
             placeholder="Имя"
           ></input>
@@ -148,9 +172,13 @@ function Register({ onLogin }) {
           </span>
           <input
             type="email"
-            value={email ? email : ""}
+            value={email ? email : ''}
             onChange={handleInputEmail}
-            className={errorEmail ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin" }
+            className={
+              errorEmail
+                ? 'dialog__input dialog__input_type_signin dialog__input_type_error'
+                : 'dialog__input dialog__input_type_signin'
+            }
             placeholder="E-mail"
             disabled={isLoading}
           ></input>
@@ -160,9 +188,13 @@ function Register({ onLogin }) {
           </span>
           <input
             type="password"
-            value={password ? password : ""}
+            value={password ? password : ''}
             onChange={handleInputPassword}
-            className={errorPassword ? "dialog__input dialog__input_type_signin dialog__input_type_error" : "dialog__input dialog__input_type_signin"}
+            className={
+              errorPassword
+                ? 'dialog__input dialog__input_type_signin dialog__input_type_error'
+                : 'dialog__input dialog__input_type_signin'
+            }
             placeholder="пароль"
             disabled={isLoading}
           ></input>
@@ -171,8 +203,8 @@ function Register({ onLogin }) {
           <button
             className={
               submitActive
-                ? "dialog__button dialog__button_type_log dialog__button_type_log-reg"
-                : "dialog__button dialog__button_type_log-reg dialog__button_type_log-inactive "
+                ? 'dialog__button dialog__button_type_log dialog__button_type_log-reg'
+                : 'dialog__button dialog__button_type_log-reg dialog__button_type_log-inactive '
             }
             onClick={handleSubmit}
           >
@@ -182,7 +214,7 @@ function Register({ onLogin }) {
             Уже зарегистрированы?
             <button
               className="dialog__button-link"
-              onClick={() => navigate("/signin")}
+              onClick={() => navigate('/signin')}
             >
               Войти
             </button>
