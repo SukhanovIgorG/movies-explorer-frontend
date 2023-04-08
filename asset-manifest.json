@@ -1,8 +1,7 @@
 {
   "files": {
     "main.css": "/movies-explorer-frontend/static/css/main.8b0b6b30.css",
-    "main.js": "/movies-explorer-frontend/static/js/main.71d0cedc.js",
-    "static/js/787.5fef94a4.chunk.js": "/movies-explorer-frontend/static/js/787.5fef94a4.chunk.js",
+    "main.js": "/movies-explorer-frontend/static/js/main.cd829f7b.js",
     "static/media/landing-logo.svg": "/movies-explorer-frontend/static/media/landing-logo.d12e7f8458f96ee4fac2b246a42d2e01.svg",
     "static/media/Inter-Medium.woff?v=3.19": "/movies-explorer-frontend/static/media/Inter-Medium.9053572c46aeb4b16caa.woff",
     "static/media/Inter-Black.woff?v=3.19": "/movies-explorer-frontend/static/media/Inter-Black.c6938660eec019fefd68.woff",
@@ -25,11 +24,10 @@
     "static/media/menu-button-open.svg": "/movies-explorer-frontend/static/media/menu-button-open.09da049275af48ed6340.svg",
     "static/media/smalltumb_active.svg": "/movies-explorer-frontend/static/media/smalltumb_active.efba29772b9fa12983c6.svg",
     "main.8b0b6b30.css.map": "/movies-explorer-frontend/static/css/main.8b0b6b30.css.map",
-    "main.71d0cedc.js.map": "/movies-explorer-frontend/static/js/main.71d0cedc.js.map",
-    "787.5fef94a4.chunk.js.map": "/movies-explorer-frontend/static/js/787.5fef94a4.chunk.js.map"
+    "main.cd829f7b.js.map": "/movies-explorer-frontend/static/js/main.cd829f7b.js.map"
   },
   "entrypoints": [
     "static/css/main.8b0b6b30.css",
-    "static/js/main.71d0cedc.js"
+    "static/js/main.cd829f7b.js"
   ]
 }
