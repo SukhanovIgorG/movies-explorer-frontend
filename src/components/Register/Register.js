@@ -5,9 +5,6 @@ import {register, login} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
 import {REG_EMAIL, REG_NAME} from '../../constants/constans';
 
-// import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
-// const auth = getAuth();
-
 function Register({onLogin}) {
   const navigate = useNavigate();
 
@@ -96,7 +93,6 @@ function Register({onLogin}) {
       setIsLoading(true);
       register({name, email, password})
         .then((user) => {
-          console.log('user :>> ', user);
           setIsLoading(false);
           localStorage.setItem('JWT', user.accessToken);
           handleLogin(user.uid);
@@ -109,6 +105,7 @@ function Register({onLogin}) {
           setIsLoading(false);
           const errorCode = error.code;
           const errorMessage = error.message;
+          apiErrorController(error);
           console.log('errorMessage :>> ', errorCode, errorMessage);
         });
     } else {

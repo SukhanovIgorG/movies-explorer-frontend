@@ -3,7 +3,7 @@ import {Route, Routes, HashRouter} from 'react-router-dom';
 
 import {getMovies} from '../../utils/MoviesApi';
 import {CurrentUserContext} from '../../context/CurrentUserContext';
-import {addMovies, deleteMovies} from '../../utils/MainApi';
+// import {addMovies, deleteMovies} from '../../utils/MainApi';
 import {autorization, getUserInfo, myMovies} from '../../utils/MainApi';
 import {
   REG_URL,
@@ -231,62 +231,62 @@ function App() {
   };
 
   // LIKE & DELETE
-  const checkMovieValid = (preMovie) => {
-    let movie = preMovie;
-    if (!REG_URL.test(preMovie.trailerLink)) {
-      movie.trailerLink = 'https://youtu.be/';
-      return movie;
-    } else {
-      return movie;
-    }
-  };
+  // const checkMovieValid = (preMovie) => {
+  //   let movie = preMovie;
+  //   if (!REG_URL.test(preMovie.trailerLink)) {
+  //     movie.trailerLink = 'https://youtu.be/';
+  //     return movie;
+  //   } else {
+  //     return movie;
+  //   }
+  // };
 
-  const handleLike = (preMovie) => {
-    let movie = checkMovieValid(preMovie);
-    addMovies(movie)
-      .then((res) => {
-        setMySavedMovies([res.movie, ...mySavedMovies]);
-        setRenderSavedMovies([res.movie, ...renderSavedMovies]);
-        localStorage.setItem(
-          'savedMovies',
-          JSON.stringify([res.movie, ...renderSavedMovies])
-        );
-        setCatchMessage('');
-      })
-      .catch(() => {
-        setCatchMessage(
-          'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-        );
-      });
-  };
-  const handleDelete = (movie) => {
-    const dellMovie = mySavedMovies.find(
-      (item) =>
-        Number(item.movieId) === Number(movie.id) ||
-        Number(item.movieId) === Number(movie.movieId)
-    );
-    if (dellMovie === undefined) {
-    } else {
-      deleteMovies(dellMovie._id)
-        .then(() => {
-          const arrWithOutDellMovie = mySavedMovies.filter(
-            (item) => item.movieId !== dellMovie.movieId
-          );
-          setMySavedMovies(arrWithOutDellMovie);
-          setRenderSavedMovies(arrWithOutDellMovie);
-          localStorage.setItem(
-            'savedMovies',
-            JSON.stringify(arrWithOutDellMovie)
-          );
-          setCatchMessage('');
-        })
-        .catch(() => {
-          setCatchMessage(
-            'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-          );
-        });
-    }
-  };
+  // const handleLike = (preMovie) => {
+  //   let movie = checkMovieValid(preMovie);
+  //   addMovies(movie)
+  //     .then((res) => {
+  //       setMySavedMovies([res.movie, ...mySavedMovies]);
+  //       setRenderSavedMovies([res.movie, ...renderSavedMovies]);
+  //       localStorage.setItem(
+  //         'savedMovies',
+  //         JSON.stringify([res.movie, ...renderSavedMovies])
+  //       );
+  //       setCatchMessage('');
+  //     })
+  //     .catch(() => {
+  //       setCatchMessage(
+  //         'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+  //       );
+  //     });
+  // };
+  // const handleDelete = (movie) => {
+  //   const dellMovie = mySavedMovies.find(
+  //     (item) =>
+  //       Number(item.movieId) === Number(movie.id) ||
+  //       Number(item.movieId) === Number(movie.movieId)
+  //   );
+  //   if (dellMovie === undefined) {
+  //   } else {
+  //     deleteMovies(dellMovie._id)
+  //       .then(() => {
+  //         const arrWithOutDellMovie = mySavedMovies.filter(
+  //           (item) => item.movieId !== dellMovie.movieId
+  //         );
+  //         setMySavedMovies(arrWithOutDellMovie);
+  //         setRenderSavedMovies(arrWithOutDellMovie);
+  //         localStorage.setItem(
+  //           'savedMovies',
+  //           JSON.stringify(arrWithOutDellMovie)
+  //         );
+  //         setCatchMessage('');
+  //       })
+  //       .catch(() => {
+  //         setCatchMessage(
+  //           'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+  //         );
+  //       });
+  //   }
+  // };
 
   // LOGIN / LOGOUT
   function handlerLogin(status) {
@@ -385,8 +385,8 @@ function App() {
                     onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={searchMovies.length === renderMovies.length}
-                    onLike={handleLike}
-                    onDelete={handleDelete}
+                    // onLike={handleLike}
+                    // onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
                     onCatch={catchMessage}
                     onSetCatch={setCatchMessage}
@@ -422,8 +422,8 @@ function App() {
                     onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={true}
-                    onLike={handleLike}
-                    onDelete={handleDelete}
+                    // onLike={handleLike}
+                    // onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
                     onCatch={catchMessage}
                     onSetCatch={setCatchMessage}

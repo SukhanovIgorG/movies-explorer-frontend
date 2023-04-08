@@ -1,16 +1,19 @@
 import {useEffect} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 
-import {firebaseConfig} from '../../fireBaseConfig';
-import {initializeApp} from 'firebase/app';
-import {getFirestore} from 'firebase/firestore';
-import {collection, doc, setDoc, getDoc} from 'firebase/firestore';
+// import {firebaseConfig} from '../../fireBaseConfig';
+// import {initializeApp} from 'firebase/app';
+// import {getFirestore} from 'firebase/firestore';
+// import {collection, doc, setDoc, getDoc} from 'firebase/firestore';
+// import {updateDoc, arrayUnion, arrayRemove} from 'firebase/firestore';
 
 import Search from '../Search/Search';
 import MoviesList from '../MoviesList/MoviesList';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Preloader from '../Preloader/Preloader';
+
+import {likeMovies, disLakeMovies} from '../../utils/MainApi';
 
 function Movies({
   isLoading,
@@ -40,71 +43,25 @@ function Movies({
   const navigate = useNavigate();
   let movies = Array.from(onMovies);
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const citiesRef = collection(db, 'users');
+  // const app = initializeApp(firebaseConfig);
+  // const db = getFirestore(app);
+  // const citiesRef = collection(db, 'users');
 
   useEffect(() => {
     onReset();
     onSetCatch();
   }, [savedMoviesStatus]);
 
-  async function Like() {
-    // console.log('GO :>> ', db);
-    // const citiesRef = collection(db, 'users');
-    // await setDoc(doc(citiesRef, 'SF'), {
-    //   name: 'San Francisco',
-    //   state: 'CA',
-    //   country: 'USA',
-    //   capital: false,
-    //   population: 860000,
-    //   regions: ['west_coast', 'norcal'],
-    // });
-    // await setDoc(doc(citiesRef, 'LA'), {
-    //   name: 'Los Angeles',
-    //   state: 'CA',
-    //   country: 'USA',
-    //   capital: false,
-    //   population: 3900000,
-    //   regions: ['west_coast', 'socal'],
-    // });
-    // await setDoc(doc(citiesRef, 'DC'), {
-    //   name: 'Washington, D.C.',
-    //   state: null,
-    //   country: 'USA',
-    //   capital: true,
-    //   population: 680000,
-    //   regions: ['east_coast'],
-    // });
-    // await setDoc(doc(citiesRef, 'TOK'), {
-    //   name: 'Tokyo',
-    //   state: null,
-    //   country: 'Japan',
-    //   capital: true,
-    //   population: 9000000,
-    //   regions: ['kanto', 'honshu'],
-    // });
-    // await setDoc(doc(citiesRef, 'BJ'), {
-    //   name: 'Beijing',
-    //   state: null,
-    //   country: 'China',
-    //   capital: true,
-    //   population: 21500000,
-    //   regions: ['jingjinji', 'hebei'],
-    // });
+  async function Like(arg) {
+    console.log('arg :>> ', arg);
+    const like = await likeMovies(arg.nameRU);
+
+    // console.log('like :>> ', like);
   }
 
-  async function Like() {
-    console.log('db :>> ', db);
-    const docRef = doc(db, 'movies', 'test');
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      console.log('Document data:', docSnap.data());
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log('No such document!');
-    }
+  async function disLike(arg) {
+    console.log('arg :>> ', arg);
+    const dislike = await disLakeMovies(arg.nameRU);
   }
 
   return (
@@ -236,7 +193,7 @@ function Movies({
             savedMoviesBlock={savedMoviesStatus}
             movies={savedMoviesStatus ? onMoviesSave : onMovies}
             addLike={Like}
-            deleteLike={onDelete}
+            deleteLike={disLike}
             render={onMovies}
           >
             <button
