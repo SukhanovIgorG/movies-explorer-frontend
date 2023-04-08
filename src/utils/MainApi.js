@@ -1,3 +1,23 @@
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import {firebaseConfig} from '../fireBaseConfig';
+import {initializeApp} from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+} from 'firebase/firestore';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const usersRef = collection(db, 'users');
+
 export const BASE_URL = 'http://localhost:9999';
 
 const checkResponse = (res) => {
@@ -8,52 +28,46 @@ const checkResponse = (res) => {
 };
 
 export const register = ({name, email, password}) => {
-  return fetch(`${BASE_URL}/signup`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: name,
-      email: email,
-      password: password,
-    }),
-  }).then((res) => checkResponse(res));
+  return createUserWithEmailAndPassword(auth, email, password).then(
+    (userCredential) => {
+      const newUser = userCredential.user;
+      setDoc(doc(usersRef, newUser.uid), {
+        name: name,
+        email: email,
+        password: password,
+        movies: [],
+        createdAt: newUser.metadata.createdAt,
+        creationTime: newUser.metadata.creationTime,
+      });
+      return newUser;
+    }
+  );
 };
 
 export const login = ({email, password}) => {
-  return fetch(`${BASE_URL}/signin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  }).then((res) => checkResponse(res));
+  return signInWithEmailAndPassword(auth, email, password);
 };
 
 // проверка мейла
-export const me = () => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
-    },
-  }).then((res) => checkResponse(res));
+export const getUserInfo = async (id) => {
+  const docRef = doc(db, 'users', id);
+  const userInfo = await getDoc(docRef);
+  if (userInfo.exists()) {
+    return userInfo.data();
+  } else {
+    throw new Error('Document not found');
+  }
 };
 // проверка токена
-export const autorization = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((res) => checkResponse(res));
-};
+// export const autorization = (token) => {
+//   return fetch(`${BASE_URL}/users/me`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${token}`,
+//     },
+//   }).then((res) => checkResponse(res));
+// };
 
 export const updateUser = ({name, email}) => {
   return fetch(`${BASE_URL}/users/me`, {
@@ -69,15 +83,15 @@ export const updateUser = ({name, email}) => {
   }).then((res) => checkResponse(res));
 };
 
-export const myMovies = () => {
-  return fetch(`${BASE_URL}/movies`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('JWT')}`,
-    },
-  }).then((res) => checkResponse(res));
-};
+// export const myMovies = () => {
+//   return fetch(`${BASE_URL}/movies`, {
+//     method: 'GET',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       Authorization: `Bearer ${localStorage.getItem('JWT')}`,
+//     },
+//   }).then((res) => checkResponse(res));
+// };
 
 export const addMovies = (movie) => {
   return fetch(`${BASE_URL}/movies`, {
@@ -111,10 +125,3 @@ export const deleteMovies = (_id) => {
     },
   }).then((res) => checkResponse(res));
 };
-
-// .then((res) => {
-//   return res;
-// })
-// .catch((err)=>{
-//   return console.log(err.message)
-// })

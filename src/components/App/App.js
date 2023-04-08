@@ -1,12 +1,10 @@
 import {useState, useEffect} from 'react';
 import {Route, Routes, HashRouter} from 'react-router-dom';
-import {getDatabase} from 'firebase/database';
 
-import {app} from '../../index';
 import {getMovies} from '../../utils/MoviesApi';
 import {CurrentUserContext} from '../../context/CurrentUserContext';
 import {addMovies, deleteMovies} from '../../utils/MainApi';
-import {autorization, me, myMovies} from '../../utils/MainApi';
+import {autorization, getUserInfo, myMovies} from '../../utils/MainApi';
 import {
   REG_URL,
   SCREEN_MIN,
@@ -49,13 +47,6 @@ function App() {
   const [menuVisible, setMenuVisible] = useState(false);
   const [firstLounch, setFirstLounch] = useState(false);
   const [catchMessage, setCatchMessage] = useState('');
-
-  useEffect(() => {
-    return () => {
-      const db = getDatabase(app);
-      console.log('db :>> ', db);
-    };
-  });
 
   // MENU OPEN/CLOSE
   const hendlerOpenMenu = () => {
@@ -116,27 +107,28 @@ function App() {
   //   }
   // }, [jwt]);
 
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     screenControl();
-  //     Promise.all([me(), myMovies()])
-  //       .then(([user, saveMovies]) => {
-  //         setCurrentUser(user.user);
-  //         setMySavedMovies(saveMovies.movie);
-  //         setRenderSavedMovies(saveMovies.movie);
-  //         localStorage.setItem('savedMovies', JSON.stringify(saveMovies.movie));
-  //         setCatchMessage('');
-  //       })
-  //       .catch((err) => {
-  //         setCatchMessage(
-  //           'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-  //         );
-  //         console.log(`ошибка. Сообщение: ${err.message}`);
-  //       });
-  //   } else {
-  //     console.log('авторизация не выполнена');
-  //   }
-  // }, [loggedIn]);
+  useEffect(() => {
+    if (loggedIn) {
+      console.log('loggedIn :>> ', loggedIn);
+      screenControl();
+      const getData = async () => {
+        const userInfo = await getUserInfo(loggedIn);
+        if (userInfo) {
+          setCurrentUser(userInfo);
+          setMySavedMovies(userInfo.movies);
+          setRenderSavedMovies(userInfo.movies);
+          localStorage.setItem('savedMovies', JSON.stringify(userInfo.movies));
+          setCatchMessage('');
+        } else {
+          console.log(`Error load data`);
+        }
+        console.log('userInfo :>> ', userInfo);
+      };
+      getData();
+    } else {
+      console.log('авторизация не выполнена');
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     sliceMovieList();

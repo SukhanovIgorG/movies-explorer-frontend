@@ -1,5 +1,3 @@
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth';
-
 import headerLogo from '../../image/header-logo.svg';
 
 import {useState, useEffect} from 'react';
@@ -18,8 +16,6 @@ function Login({onLogin, setCurrentUser}) {
   const [errorPassword, setErrorPassword] = useState('');
   const [submitActive, setSubmitActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const auth = getAuth();
 
   useEffect(() => {
     if (errorEmail || errorPassword) {
@@ -74,22 +70,14 @@ function Login({onLogin, setCurrentUser}) {
     e.preventDefault();
     if (submitActive) {
       setIsLoading(true);
-      // login({email, password})
-      //   .then((data) => {
-      //     localStorage.setItem('JWT', data.token);
-      //     handleLogin(true);
-      //     setEmail('');
-      //     setPassword('');
-      //     navigate('/movies');
-      //     setIsLoading(false);
-      //   })
-      signInWithEmailAndPassword(auth, email, password)
+      login({email, password})
+        // signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in
+          console.log('userCredential :>> ', userCredential);
           const user = userCredential.user;
           setCurrentUser(user);
           localStorage.setItem('JWT', user.accessToken);
-          handleLogin(true);
+          handleLogin(user.uid);
           setEmail('');
           setPassword('');
           navigate('/movies');
@@ -102,12 +90,6 @@ function Login({onLogin, setCurrentUser}) {
           setErrorApi(apiErrorController(error));
           setIsLoading(false);
         });
-
-      // .catch((err) => {
-      //   console.log(err);
-      //   setErrorApi(apiErrorController(err));
-      //   setIsLoading(false);
-      // });
     } else {
       setErrorApi('Заполните все поля корректными данными');
     }

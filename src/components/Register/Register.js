@@ -5,7 +5,8 @@ import {register, login} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
 import {REG_EMAIL, REG_NAME} from '../../constants/constans';
 
-import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+// import {getAuth, createUserWithEmailAndPassword} from 'firebase/auth';
+// const auth = getAuth();
 
 function Register({onLogin}) {
   const navigate = useNavigate();
@@ -93,45 +94,22 @@ function Register({onLogin}) {
     e.preventDefault();
     if (submitActive) {
       setIsLoading(true);
-      // register({ name, email, password })
-      //   .then(() => {
-      //     setIsLoading(false);
-      //     login({ email, password })
-      //       .then((data) => {
-      //         localStorage.setItem("JWT", data.token);
-      //         handleLogin(true);
-      //         setName("");
-      //         setEmail("");
-      //         setPassword("");
-      //         navigate("/movies");
-      //       })
-      //       .catch((err) => {
-      //         setErrorApi(apiErrorController(err));
-      //       });
-      //   })
-      //   .catch((err) => {
-      //     setIsLoading(true);
-      //     setErrorApi(apiErrorController(err));
-      //   });
-      const auth = getAuth();
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
+      register({name, email, password})
+        .then((user) => {
           console.log('user :>> ', user);
           setIsLoading(false);
           localStorage.setItem('JWT', user.accessToken);
-          handleLogin(true);
+          handleLogin(user.uid);
           setName('');
           setEmail('');
           setPassword('');
           navigate('/movies');
         })
         .catch((error) => {
+          setIsLoading(false);
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log('errorMessage :>> ', errorCode, errorMessage);
-          // ..
         });
     } else {
       setErrorApi('Заполните все поля корректными данными');
