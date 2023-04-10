@@ -1,12 +1,10 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {Route, Routes, HashRouter} from 'react-router-dom';
 
 import {getMovies} from '../../utils/MoviesApi';
 import {CurrentUserContext} from '../../context/CurrentUserContext';
-// import {addMovies, deleteMovies} from '../../utils/MainApi';
-import {autorization, getUserInfo, myMovies} from '../../utils/MainApi';
+import {getUserInfo} from '../../utils/MainApi';
 import {
-  REG_URL,
   SCREEN_MIN,
   SCREEN_MAX,
   MOVIE_MIN,
@@ -15,7 +13,7 @@ import {
   MOVIE_MORE_MIN,
   MOVIE_MORE_MID,
   MOVIE_MORE_MAX,
-} from '../../constants/constans';
+} from '../../constants/constants';
 
 // COMPONENTS
 import Login from '../Login/Login';
@@ -23,7 +21,7 @@ import ErrorPage from '../ErrorPage/ErrorPage';
 import Register from '../Register/Register';
 import Landing from '../Landing/Landing';
 import Movies from '../Movies/Movies';
-import Profille from '../Profile/Profile';
+import Profile from '../Profile/Profile';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 
 function App() {
@@ -42,35 +40,59 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [short, setShort] = useState(true);
   const [shortSave, setShortSave] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(localStorage.getItem('JWT'));
+  const [loggedIn, setLoggedIn] = useState(
+    localStorage.getItem('JWT') ? true : false
+  );
   const [currentUser, setCurrentUser] = useState({});
   const [menuVisible, setMenuVisible] = useState(false);
-  const [firstLounch, setFirstLounch] = useState(false);
+  const [firstStart, setFirstStart] = useState(false);
   const [catchMessage, setCatchMessage] = useState('');
+  const [render, setRender] = useState('0');
 
   // MENU OPEN/CLOSE
-  const hendlerOpenMenu = () => {
+  const handlerOpenMenu = () => {
     setMenuVisible(!menuVisible);
   };
-  const hendlerCloseMenu = () => {
+  const handlerCloseMenu = () => {
     setMenuVisible(false);
   };
 
-  // USE EFFECT
+  const sliceMovieList = () => {
+    setRenderMovies(searchMovies.slice(0, startCounter));
+  };
+
+  // SCREEN CONTROL
+  const screenControl = useCallback(() => {
+    if (screenWidth < SCREEN_MIN) {
+      setStartCounter(MOVIE_MIN);
+      setMoreCounter(MOVIE_MORE_MIN);
+    }
+    if (SCREEN_MIN < screenWidth && screenWidth < SCREEN_MAX) {
+      setStartCounter(MOVIE_MID);
+      setMoreCounter(MOVIE_MORE_MID);
+    }
+    if (SCREEN_MAX < screenWidth) {
+      setStartCounter(MOVIE_MAX);
+      setMoreCounter(MOVIE_MORE_MAX);
+    }
+  }, [screenWidth]);
+
   useEffect(() => {
     screenControl();
-    handleSearch();
-  }, [screenWidth]);
+    sliceMovieList();
+  }, [loggedIn]);
 
   useEffect(() => {
     if (loggedIn) {
       if (localStorage.getItem('allMovies')) {
         setAllMovies(JSON.parse(localStorage.getItem('allMovies')));
+        setSearchMovies(JSON.parse(localStorage.getItem('allMovies')));
       } else {
         getMovies()
           .then((apiMovies) => {
             localStorage.setItem('allMovies', JSON.stringify(apiMovies));
             setAllMovies(apiMovies);
+            setSearchMovies(apiMovies);
             setCatchMessage('');
           })
           .catch(() => {
@@ -79,7 +101,6 @@ function App() {
             );
           });
       }
-      console.log('point');
       if (localStorage.getItem('searchMovies')) {
         setSearchMovies(JSON.parse(localStorage.getItem('searchMovies')));
       }
@@ -89,30 +110,12 @@ function App() {
     }
   }, [loggedIn]);
 
-  // useEffect(() => {
-  //   if (jwt) {
-  //     autorization(jwt)
-  //       .then(() => {
-  //         setLoggedIn(true);
-  //       })
-  //       .catch(() => {
-  //         setLoggedIn(false);
-  //         handleLogOut();
-  //       });
-  //   } else {
-  //     console.log('jwt не найден');
-  //     setCurrentUser({});
-  //     setLoggedIn(false);
-  //     handleLogOut();
-  //   }
-  // }, [jwt]);
-
   useEffect(() => {
-    if (loggedIn) {
-      console.log('loggedIn :>> ', loggedIn);
+    if (jwt) {
+      setLoggedIn(true);
       screenControl();
       const getData = async () => {
-        const userInfo = await getUserInfo(loggedIn);
+        const userInfo = await getUserInfo();
         if (userInfo) {
           setCurrentUser(userInfo);
           setMySavedMovies(userInfo.movies);
@@ -122,13 +125,12 @@ function App() {
         } else {
           console.log(`Error load data`);
         }
-        console.log('userInfo :>> ', userInfo);
       };
       getData();
     } else {
       console.log('авторизация не выполнена');
     }
-  }, [loggedIn]);
+  }, [loggedIn, render, screenControl, jwt]);
 
   useEffect(() => {
     sliceMovieList();
@@ -142,7 +144,7 @@ function App() {
     handleSearchInSave();
   }, [shortSave]);
 
-  // SEARC & INPUTS
+  // SEARCH & INPUTS
   const searchMoviesFunc = (dataMovies = [], name = '', short = false) => {
     let arrMovies = dataMovies ? Array.from(dataMovies) : [];
     if (short) {
@@ -181,8 +183,8 @@ function App() {
     res.length === 0
       ? setCatchMessage('ничего не найдено')
       : setCatchMessage('');
-    if (!firstLounch) {
-      setFirstLounch(true);
+    if (!firstStart) {
+      setFirstStart(true);
     } else {
       localStorage.setItem('searchMovies', JSON.stringify(res));
     }
@@ -197,24 +199,6 @@ function App() {
     setSaveKeyWord(value);
   };
 
-  // SCREEN CONTROLL
-  function screenControl() {
-    if (screenWidth < SCREEN_MIN) {
-      setStartCounter(MOVIE_MIN);
-      setMoreCounter(MOVIE_MORE_MIN);
-    }
-    if (SCREEN_MIN < screenWidth && screenWidth < SCREEN_MAX) {
-      setStartCounter(MOVIE_MID);
-      setMoreCounter(MOVIE_MORE_MID);
-    }
-    if (SCREEN_MAX < screenWidth) {
-      setStartCounter(MOVIE_MAX);
-      setMoreCounter(MOVIE_MORE_MAX);
-    }
-  }
-  const sliceMovieList = () => {
-    setRenderMovies(searchMovies.slice(0, startCounter));
-  };
   const resizeFunc = () => {
     screenControl();
     setRenderMovies(searchMovies.slice(0, startCounter));
@@ -230,64 +214,6 @@ function App() {
     setRenderMovies(searchMovies.slice(0, startCounter + moreCounter));
   };
 
-  // LIKE & DELETE
-  // const checkMovieValid = (preMovie) => {
-  //   let movie = preMovie;
-  //   if (!REG_URL.test(preMovie.trailerLink)) {
-  //     movie.trailerLink = 'https://youtu.be/';
-  //     return movie;
-  //   } else {
-  //     return movie;
-  //   }
-  // };
-
-  // const handleLike = (preMovie) => {
-  //   let movie = checkMovieValid(preMovie);
-  //   addMovies(movie)
-  //     .then((res) => {
-  //       setMySavedMovies([res.movie, ...mySavedMovies]);
-  //       setRenderSavedMovies([res.movie, ...renderSavedMovies]);
-  //       localStorage.setItem(
-  //         'savedMovies',
-  //         JSON.stringify([res.movie, ...renderSavedMovies])
-  //       );
-  //       setCatchMessage('');
-  //     })
-  //     .catch(() => {
-  //       setCatchMessage(
-  //         'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-  //       );
-  //     });
-  // };
-  // const handleDelete = (movie) => {
-  //   const dellMovie = mySavedMovies.find(
-  //     (item) =>
-  //       Number(item.movieId) === Number(movie.id) ||
-  //       Number(item.movieId) === Number(movie.movieId)
-  //   );
-  //   if (dellMovie === undefined) {
-  //   } else {
-  //     deleteMovies(dellMovie._id)
-  //       .then(() => {
-  //         const arrWithOutDellMovie = mySavedMovies.filter(
-  //           (item) => item.movieId !== dellMovie.movieId
-  //         );
-  //         setMySavedMovies(arrWithOutDellMovie);
-  //         setRenderSavedMovies(arrWithOutDellMovie);
-  //         localStorage.setItem(
-  //           'savedMovies',
-  //           JSON.stringify(arrWithOutDellMovie)
-  //         );
-  //         setCatchMessage('');
-  //       })
-  //       .catch(() => {
-  //         setCatchMessage(
-  //           'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
-  //         );
-  //       });
-  //   }
-  // };
-
   // LOGIN / LOGOUT
   function handlerLogin(status) {
     setLoggedIn(status);
@@ -299,13 +225,7 @@ function App() {
     setMySavedMovies([]);
     setKeyWord('');
     setSaveKeyWord('');
-    localStorage.removeItem('JWT');
-    localStorage.removeItem('allMovies');
-    localStorage.removeItem('savedMovies');
-    localStorage.removeItem('searchMovies');
-    localStorage.removeItem('keyWord');
-    localStorage.removeItem('conditionShort');
-    localStorage.removeItem('conditionShortSave');
+    localStorage.clear();
   };
 
   const setCurrentUserHandler = (data) => {
@@ -315,6 +235,10 @@ function App() {
     setRenderSavedMovies(mySavedMovies);
     setSaveKeyWord('');
     setShortSave(false);
+  };
+
+  const handlerRender = (arg) => {
+    setRender((prev) => Number(prev) + Number(arg));
   };
 
   return (
@@ -350,8 +274,8 @@ function App() {
               element={
                 <Landing
                   login={loggedIn}
-                  menuOpen={hendlerOpenMenu}
-                  menuClose={hendlerCloseMenu}
+                  menuOpen={handlerOpenMenu}
+                  menuClose={handlerCloseMenu}
                   logOut={handleLogOut}
                   menuStatus={menuVisible}
                 />
@@ -367,8 +291,8 @@ function App() {
                 path="/movies"
                 element={
                   <Movies
-                    menuOpen={hendlerOpenMenu}
-                    menuClose={hendlerCloseMenu}
+                    menuOpen={handlerOpenMenu}
+                    menuClose={handlerCloseMenu}
                     menuStatus={menuVisible}
                     isLoading={loading}
                     onMovies={renderMovies}
@@ -385,8 +309,7 @@ function App() {
                     onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={searchMovies.length === renderMovies.length}
-                    // onLike={handleLike}
-                    // onDelete={handleDelete}
+                    onRender={handlerRender}
                     onReset={onResetSavedMoviesSearch}
                     onCatch={catchMessage}
                     onSetCatch={setCatchMessage}
@@ -404,8 +327,8 @@ function App() {
                 path="/saved-movies"
                 element={
                   <Movies
-                    menuOpen={hendlerOpenMenu}
-                    menuClose={hendlerCloseMenu}
+                    menuOpen={handlerOpenMenu}
+                    menuClose={handlerCloseMenu}
                     menuStatus={menuVisible}
                     isLoading={loading}
                     onMovies={renderMovies}
@@ -422,11 +345,12 @@ function App() {
                     onChangeShortSave={setShortSave}
                     onMoreMovies={handleMoreMovies}
                     buttonStatus={true}
-                    // onLike={handleLike}
-                    // onDelete={handleDelete}
                     onReset={onResetSavedMoviesSearch}
                     onCatch={catchMessage}
                     onSetCatch={setCatchMessage}
+                    onRender={(arg) => {
+                      setRender((prev) => prev + arg);
+                    }}
                   />
                 }
               />
@@ -440,9 +364,9 @@ function App() {
                 exact
                 path="/profile"
                 element={
-                  <Profille
-                    menuOpen={hendlerOpenMenu}
-                    menuClose={hendlerCloseMenu}
+                  <Profile
+                    menuOpen={handlerOpenMenu}
+                    menuClose={handlerCloseMenu}
                     menuStatus={menuVisible}
                     onSetCurrentUser={setCurrentUserHandler}
                     logOut={handleLogOut}

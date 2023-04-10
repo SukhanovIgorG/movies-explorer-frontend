@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {register, login} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
-import {REG_EMAIL, REG_NAME} from '../../constants/constans';
+import {REG_EMAIL, REG_NAME} from '../../constants/constants';
 
 function Register({onLogin}) {
   const navigate = useNavigate();
@@ -95,7 +95,8 @@ function Register({onLogin}) {
         .then((user) => {
           setIsLoading(false);
           localStorage.setItem('JWT', user.accessToken);
-          handleLogin(user.uid);
+          localStorage.setItem('userId', user.uid);
+          handleLogin(true);
           setName('');
           setEmail('');
           setPassword('');

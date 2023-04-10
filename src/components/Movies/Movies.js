@@ -1,12 +1,6 @@
 import {useEffect} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 
-// import {firebaseConfig} from '../../fireBaseConfig';
-// import {initializeApp} from 'firebase/app';
-// import {getFirestore} from 'firebase/firestore';
-// import {collection, doc, setDoc, getDoc} from 'firebase/firestore';
-// import {updateDoc, arrayUnion, arrayRemove} from 'firebase/firestore';
-
 import Search from '../Search/Search';
 import MoviesList from '../MoviesList/MoviesList';
 import Footer from '../Footer/Footer';
@@ -34,18 +28,15 @@ function Movies({
   onChangeShortSave,
   onMoreMovies,
   buttonStatus,
-  onLike,
-  onDelete,
+  onRender,
   onReset,
   onCatch,
   onSetCatch,
 }) {
   const navigate = useNavigate();
-  let movies = Array.from(onMovies);
-
-  // const app = initializeApp(firebaseConfig);
-  // const db = getFirestore(app);
-  // const citiesRef = collection(db, 'users');
+  let movies = savedMoviesStatus
+    ? Array.from(onMoviesSave)
+    : Array.from(onMovies);
 
   useEffect(() => {
     onReset();
@@ -53,15 +44,18 @@ function Movies({
   }, [savedMoviesStatus]);
 
   async function Like(arg) {
-    console.log('arg :>> ', arg);
-    const like = await likeMovies(arg.nameRU);
-
-    // console.log('like :>> ', like);
+    await likeMovies(arg)
+      .then(() => {
+        onRender(1);
+      })
+      .catch(() => {
+        onCatch('Проблемы с тырнетом');
+      });
   }
 
   async function disLike(arg) {
-    console.log('arg :>> ', arg);
-    const dislike = await disLakeMovies(arg.nameRU);
+    onRender(1);
+    await disLakeMovies(arg);
   }
 
   return (
@@ -119,8 +113,8 @@ function Movies({
                 <button
                   className={
                     savedMoviesStatus
-                      ? 'header__button header__button_colections header__button_hover header__button_underline'
-                      : 'header__button header__button_colections header__button_hover'
+                      ? 'header__button header__button_collections header__button_hover header__button_underline'
+                      : 'header__button header__button_collections header__button_hover'
                   }
                 >
                   Сохраненные фильмы
@@ -190,11 +184,13 @@ function Movies({
         ) : (
           // <Preloader onLoading={false} message={"ничего не найдено"} />
           <MoviesList
-            savedMoviesBlock={savedMoviesStatus}
+            savedMoviesStatus={savedMoviesStatus}
             movies={savedMoviesStatus ? onMoviesSave : onMovies}
+            saveMovies={onMoviesSave}
             addLike={Like}
             deleteLike={disLike}
             render={onMovies}
+            onRender={onRender}
           >
             <button
               className={

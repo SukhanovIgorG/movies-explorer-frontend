@@ -1,56 +1,17 @@
-import {useState, useEffect} from 'react';
+import {useMemo} from 'react';
 
-function MovieCard({movie, render, savedMoviesStatus, onLike, onDelete}) {
-  const [isLiked, setIsLiked] = useState(false);
+function MovieCard({movie, savedMoviesStatus, onLike, onDelete, saveMovies}) {
   let setMovie = movie ? movie : {};
 
-  // useEffect(() => {
-  //   if (localStorage.getItem('savedMovies')) {
-  //     let savedMovies = Array.from(
-  //       JSON.parse(localStorage.getItem('savedMovies'))
-  //     );
-  //     let filterMovies = savedMovies.filter((item) =>
-  //       item.toLowerCase().includes(movie.nameRU.toLowerCase())
-  //     );
-  //     if (filterMovies.length > 0) {
-  //       setIsLiked(true);
-  //     } else {
-  //       setIsLiked(false);
-  //     }
-  //   }
-  // }, [render, movie.nameRU]);
+  const isLiked = useMemo(() => {
+    return saveMovies.find(
+      (item) => item.nameRU.toLowerCase() === movie.nameRU.toLowerCase()
+    );
+  }, [movie.nameRU, saveMovies]);
 
-  // useEffect(() => {
-  //   if (savedMoviesStatus) {
-  //     setIsLiked(true);
-  //   } else {
-  //     let savedMovies = localStorage.getItem('savedMovies')
-  //       ? Array.from(JSON.parse(localStorage.getItem('savedMovies')))
-  //       : [];
-  //     let filterMovies = savedMovies.filter((item) =>
-  //       item.toLowerCase().includes(movie.nameRU.toLowerCase())
-  //     );
-  //     if (filterMovies.length > 0) {
-  //       setIsLiked(true);
-  //     }
-  //   }
-  // }, [movie.nameRU, savedMoviesStatus]);
-
-  function handleMovieDelete() {
-    console.log('like');
-    setIsLiked(false);
-    onDelete(movie);
-  }
-
-  function handleLikeOrDell() {
-    if (isLiked) {
-      setIsLiked(false);
-      onDelete(movie);
-    } else {
-      setIsLiked(true);
-      onLike(movie);
-    }
-  }
+  const handleLikeOrDell = () => {
+    isLiked || savedMoviesStatus ? onDelete(movie) : onLike(movie);
+  };
 
   return (
     <li className="card">
@@ -60,11 +21,7 @@ function MovieCard({movie, render, savedMoviesStatus, onLike, onDelete}) {
       >
         <img
           className="card__image"
-          src={
-            savedMoviesStatus
-              ? setMovie.image
-              : `https://api.nomoreparties.co/${setMovie.image.url}`
-          }
+          src={`https://api.nomoreparties.co/${setMovie.image.url}`}
           alt={movie.nameRU}
         />
       </a>
@@ -80,7 +37,7 @@ function MovieCard({movie, render, savedMoviesStatus, onLike, onDelete}) {
           <button
             type="button"
             className="card__trash"
-            onClick={handleMovieDelete}
+            onClick={handleLikeOrDell}
           />
         )}
         {!savedMoviesStatus && (

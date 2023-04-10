@@ -4,7 +4,7 @@ import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {login} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
-import {REG_EMAIL} from '../../constants/constans';
+import {REG_EMAIL} from '../../constants/constants';
 
 function Login({onLogin, setCurrentUser}) {
   const navigate = useNavigate();
@@ -71,13 +71,12 @@ function Login({onLogin, setCurrentUser}) {
     if (submitActive) {
       setIsLoading(true);
       login({email, password})
-        // signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          console.log('userCredential :>> ', userCredential);
           const user = userCredential.user;
           setCurrentUser(user);
           localStorage.setItem('JWT', user.accessToken);
-          handleLogin(user.uid);
+          localStorage.setItem('userId', user.uid);
+          handleLogin(true);
           setEmail('');
           setPassword('');
           navigate('/movies');

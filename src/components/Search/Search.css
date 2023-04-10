@@ -15,8 +15,7 @@
   align-items: center;
 
   border-radius: 40px;
-  background-color: #F9F9F9;
-  ;
+  background-color: #f9f9f9;
 }
 .search__input {
   padding-left: 22px;
@@ -26,16 +25,14 @@
 
   border: none;
   border-radius: 40px;
-  background-color: #F9F9F9;
+  background-color: #f9f9f9;
 
   font-style: normal;
   font-weight: 400;
   font-size: 13px;
   line-height: 17px;
-  /* or 131% */
 
-
-  color: #A0A0A0;
+  color: #a0a0a0;
 }
 
 .search__span {
@@ -48,20 +45,20 @@
 }
 
 .search__button {
+  cursor: pointer;
   margin-right: 6px;
   width: 60px;
   height: 34px;
   border: none;
   border-radius: 40px;
-  background-color: #3456F3;
+  background-color: #3456f3;
 
   font-style: normal;
   font-weight: 500;
   font-size: 11px;
   line-height: 18px;
   text-align: center;
-  color: #FFFFFF;
-
+  color: #ffffff;
 }
 
 .search__option-container {
@@ -71,19 +68,21 @@
   flex-direction: row;
 }
 .search__option-button {
+  cursor: pointer;
   width: 36px;
   height: 20px;
   border: none;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   background-image: url('../../image/smalltumb_active.svg');
   background-position: center;
 }
 
 .search__option-button_off {
+  cursor: pointer;
   width: 36px;
   height: 20px;
   border: none;
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   background-position: center;
   background-image: url('../../image/smalltumb_off.svg');
 }
@@ -96,22 +95,16 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  /* identical to box height, or 129% */
-
-
   color: #000000;
 }
 
 @media screen and (max-width: 768px) {
-
   .search {
     padding: 80px 30px 50px 30px;
   }
-  
 }
 
 @media screen and (max-width: 320px) {
-
   .search {
     padding: 80px 15px 50px 15px;
   }
@@ -130,5 +123,4 @@
     margin-right: 3px;
     width: 77px;
   }
-  
 }

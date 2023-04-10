@@ -1,19 +1,19 @@
-import logo from "../../image/header-logo.svg";
-import { useNavigate } from "react-router-dom";
+import logo from '../../image/header-logo.svg';
+import {useNavigate} from 'react-router-dom';
 
-function Header({ colorDark, loggedIn, children }) {
+function Header({colorDark, children}) {
   const navigate = useNavigate();
   return (
     <header
       className={
-        colorDark ? "header header_type_content" : "header header_type_dialog"
+        colorDark ? 'header header_type_content' : 'header header_type_dialog'
       }
     >
       <img
         src={logo}
         alt="logo"
         className="header__logo"
-        onClick={() => navigate("/")}
+        onClick={() => navigate('/')}
       />
       {children}
     </header>
