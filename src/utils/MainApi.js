@@ -19,9 +19,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const usersRef = collection(db, 'users');
 let userId = localStorage.getItem('userId');
-const userRef = userId
-  ? doc(db, 'users', userId)
-  : doc(db, 'users', '2sNdZO84vgaV3H2X5rSRo90LNtC2');
+const userRef = userId ? doc(db, 'users', userId) : null;
 
 export const register = ({name, email, password}) => {
   return createUserWithEmailAndPassword(auth, email, password).then(

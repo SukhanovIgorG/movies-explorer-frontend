@@ -141,13 +141,13 @@
   height: 30px;
   margin-left: 17px;
 
-  background-image: url(../../image/account.svg);
+  background-image: url(../../../image/account.svg);
   background-position: center;
   background-repeat: no-repeat;
 }
 .header__button_account-img_color-dark {
   width: 10px;
-  background-image: url(../../image/account_color-dark.svg);
+  background-image: url(../../../image/account_color-dark.svg);
 }
 
 .header__button_sign-up {
@@ -256,14 +256,14 @@
   }
 
   .header__menu-button_open {
-    background-image: url(../../image/menu-button-open.svg);
+    background-image: url(../../../image/menu-button-open.svg);
   }
 
   .header__menu-button_clos {
-    background-image: url(../../image/menu-button.svg);
+    background-image: url(../../../image/menu-button.svg);
   }
   .header__menu-button_clos_color_dark {
-    background-image: url(../../image/menu-button_color-dark.svg);
+    background-image: url(../../../image/menu-button_color-dark.svg);
   }
 
   .header__button:hover {

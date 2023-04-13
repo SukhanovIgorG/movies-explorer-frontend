@@ -1,4 +1,4 @@
-import logo from '../../image/header-logo.svg';
+import logo from '../../../image/header-logo.svg';
 import {useNavigate} from 'react-router-dom';
 
 function Header({colorDark, children}) {

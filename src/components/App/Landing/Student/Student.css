@@ -1,5 +1,7 @@
-.student {}
-.student__container {}
+.student {
+}
+.student__container {
+}
 .student__resume-container {
   display: flex;
   flex-direction: row;
@@ -11,8 +13,7 @@
 }
 .student__resume-title {
   margin: 0;
-  padding-top: 66px
-  ;
+  padding-top: 66px;
   max-width: 600px;
   font-style: normal;
   font-weight: 400;
@@ -35,7 +36,6 @@
   line-height: 20px;
   text-align: left;
 
-
   color: #000000;
 
   mix-blend-mode: normal;
@@ -50,7 +50,6 @@
   font-size: 14px;
   line-height: 22px;
   text-align: left;
-
 
   color: #000000;
 
@@ -67,7 +66,6 @@
   line-height: 17px;
   text-align: left;
 
-
   color: #000000;
 }
 .student__resume-photo {
@@ -75,8 +73,8 @@
   width: 270px;
   height: 327px;
   border-radius: 10px;
-  
-  background-image: url('../../image/portfolio-photo_my.jpeg');
+
+  background-image: url('../../../../image/portfolio-photo_my.jpeg');
   background-position: center;
   background-size: cover;
 }
@@ -85,7 +83,6 @@
   list-style-type: none;
   margin: 0;
   padding: 100px 0 0 0;
-
 
   width: 100%;
 }
@@ -101,8 +98,7 @@
   text-align: left;
   /* identical to box height, or 111% */
 
-
-  color: #A0A0A0;
+  color: #a0a0a0;
 
   mix-blend-mode: normal;
 }
@@ -116,13 +112,12 @@
   justify-content: space-between;
   align-items: center;
 
-  border-bottom: #E8E8E8 1px solid;
+  border-bottom: #e8e8e8 1px solid;
 }
 
 .student__portfolio-item:last-child {
   border: none;
 }
-
 
 .student__portfolio-link {
   text-decoration: none;
@@ -150,13 +145,12 @@
 }
 
 @media screen and (max-width: 768px) {
-.student__resume-paragraph {
+  .student__resume-paragraph {
     max-width: 450px;
   }
 }
 
 @media screen and (max-width: 768px) {
-
   .student__resume-title {
     font-style: normal;
     font-weight: 400;
@@ -165,7 +159,6 @@
   }
 
   .student__resume-subtitle {
-
     padding-top: 16px;
     font-style: normal;
     font-weight: 500;
@@ -181,7 +174,6 @@
     font-weight: 400;
     font-size: 12px;
     line-height: 18px;
-
   }
 
   .student__resume-photo {
@@ -220,7 +212,6 @@
   }
 }
 @media screen and (max-width: 580px) {
-
   .student {
     padding: 81px 14px 72px 14px;
   }
@@ -238,7 +229,6 @@
 
   .student__resume-title {
     padding-top: 41px;
-
 
     font-size: 30px;
     line-height: 36px;

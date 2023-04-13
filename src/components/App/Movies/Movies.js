@@ -1,13 +1,13 @@
 import {useEffect} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 
-import Search from '../Search/Search';
-import MoviesList from '../MoviesList/MoviesList';
+import Search from './Search/Search';
+import MoviesList from './MoviesList/MoviesList';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
-import Preloader from '../Preloader/Preloader';
+import Preloader from '../../Preloader/Preloader';
 
-import {likeMovies, disLakeMovies} from '../../utils/MainApi';
+import {likeMovies, disLakeMovies} from '../../../utils/MainApi';
 
 function Movies({
   isLoading,
@@ -49,7 +49,7 @@ function Movies({
         onRender(1);
       })
       .catch(() => {
-        onCatch('Проблемы с тырнетом');
+        onSetCatch('Проблемы с тырнетом');
       });
   }
 

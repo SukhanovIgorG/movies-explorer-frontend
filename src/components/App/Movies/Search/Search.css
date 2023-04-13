@@ -73,7 +73,7 @@
   height: 20px;
   border: none;
   background-color: rgba(0, 0, 0, 0);
-  background-image: url('../../image/smalltumb_active.svg');
+  background-image: url('../../../../image/smalltumb_active.svg');
   background-position: center;
 }
 
@@ -84,7 +84,7 @@
   border: none;
   background-color: rgba(0, 0, 0, 0);
   background-position: center;
-  background-image: url('../../image/smalltumb_off.svg');
+  background-image: url('../../../../image/smalltumb_off.svg');
 }
 
 .search__option-span {

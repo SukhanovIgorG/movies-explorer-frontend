@@ -1,15 +1,15 @@
 .card {
   max-width: 364px;
   min-width: 364px;
-  background-color: #FDFDFD;
+  background-color: #fdfdfd;
   width: min-content;
   border-radius: 5px;
   overflow: hidden;
 
-  background-color:  #F9F9F9;
+  background-color: #f9f9f9;
 }
 
-.card__like-box { 
+.card__like-box {
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -45,7 +45,7 @@
   width: 50px;
   height: 25px;
   background-color: rgba(0, 0, 0, 0);
-  background-image: url('../../image/like_disabled.svg');
+  background-image: url('../../../../../image/like_disabled.svg');
   background-size: 15px 15px;
   background-repeat: no-repeat;
   background-position: center;
@@ -58,9 +58,8 @@
 
 .card__like_active {
   background-size: 35px 35px;
-  background-image: url('../../image/like_active.svg');
+  background-image: url('../../../../../image/like_active.svg');
 }
-
 
 .card__title {
   display: block;
@@ -88,7 +87,6 @@
   line-height: 16px;
   /* identical to box height */
 
-
   color: #000000;
 }
 .card__info-container {
@@ -105,11 +103,11 @@
   width: 41px;
   height: 32px;
   background-color: rgba(0, 0, 0, 0);
-  background-image: url('../../image/trash.svg');
+  background-image: url('../../../../../image/trash.svg');
   background-size: 30px;
   background-repeat: no-repeat;
   background-position: center;
-/* 
+  /* 
   position: relative;
   top: -313px;
   right: -119px; */
@@ -124,7 +122,7 @@
   display: flex;
   align-items: center;
 
-  color: #A0A0A0;
+  color: #a0a0a0;
 }
 .card__trash:hover {
   opacity: 60%;

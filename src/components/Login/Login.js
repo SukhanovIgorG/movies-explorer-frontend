@@ -4,7 +4,7 @@ import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {login} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
-import {REG_EMAIL} from '../../constants/constants';
+import {validationPassword, validationEmail} from './utils';
 
 function Login({onLogin, setCurrentUser}) {
   const navigate = useNavigate();
@@ -26,32 +26,8 @@ function Login({onLogin, setCurrentUser}) {
   }, [errorApi, errorEmail, errorPassword]);
 
   useEffect(() => {
-    if (errorEmail || errorPassword) {
-      setSubmitActive(false);
-    } else {
-      setSubmitActive(true);
-    }
-  }, []);
-
-  useEffect(() => {
     setErrorApi('');
   }, [email, password]);
-
-  const validationEmail = (value) => {
-    if (!REG_EMAIL.test(value)) {
-      setErrorEmail(`${value} не является электронной почтой`);
-    } else {
-      setErrorEmail('');
-    }
-  };
-
-  const validationPassword = (value) => {
-    if (value.length < 1) {
-      setErrorPassword(`Пароль не может быть пустым`);
-    } else {
-      setErrorPassword('');
-    }
-  };
 
   function handleLogin(status) {
     onLogin(status);
@@ -59,11 +35,11 @@ function Login({onLogin, setCurrentUser}) {
 
   function handleInputEmail(e) {
     setEmail(e.target.value);
-    validationEmail(e.target.value);
+    setErrorEmail(validationEmail(e.target.value));
   }
   function handleInputPassword(e) {
     setPassword(e.target.value);
-    validationPassword(e.target.value);
+    setErrorPassword(validationPassword(e.target.value));
   }
 
   function handleSubmit(e) {

@@ -19,8 +19,8 @@ import {
 import Login from '../Login/Login';
 import ErrorPage from '../ErrorPage/ErrorPage';
 import Register from '../Register/Register';
-import Landing from '../Landing/Landing';
-import Movies from '../Movies/Movies';
+import Landing from './Landing/Landing';
+import Movies from './Movies/Movies';
 import Profile from '../Profile/Profile';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 

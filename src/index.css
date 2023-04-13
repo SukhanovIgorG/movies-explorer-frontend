@@ -5,16 +5,16 @@
 
 @import url(./components/App/App.css);
 
-@import url(./components/Header/Header.css);
-@import url(./components/Hero/Hero.css);
-@import url(./components/About/About.css);
-@import url(./components/Tech/Tech.css);
-@import url(./components/Student/Student.css);
-@import url(./components/Footer/footer.css);
-@import url(./components/Movies/Movies.css);
-@import url(./components/Search/Search.css);
-@import url(./components/MoviesList/Movies-list.css);
-@import url(./components/MovieCard/MovieCard.css);
+@import url(./components/App/Header/Header.css);
+@import url(./components/App/Landing/Hero/Hero.css);
+@import url(./components/App/Landing/About/About.css);
+@import url(./components/App/Landing/Tech/Tech.css);
+@import url(./components/App/Landing/Student/Student.css);
+@import url(./components/App/Footer/footer.css);
+@import url(./components/App/Movies/Movies.css);
+@import url(./components/App/Movies/Search/Search.css);
+@import url(./components/App/Movies/MoviesList/Movies-list.css);
+@import url(./components/App/Movies/MoviesList/MovieCard/MovieCard.css);
 @import url(./components/Dialog/Dialog.css);
 @import url(./components/ErrorPage/Error-page.css);
 @import url(./components/Preloader/Preloader.css);

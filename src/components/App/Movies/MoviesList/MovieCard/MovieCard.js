@@ -4,9 +4,13 @@ function MovieCard({movie, savedMoviesStatus, onLike, onDelete, saveMovies}) {
   let setMovie = movie ? movie : {};
 
   const isLiked = useMemo(() => {
-    return saveMovies.find(
-      (item) => item.nameRU.toLowerCase() === movie.nameRU.toLowerCase()
-    );
+    if (saveMovies.length > 0) {
+      return saveMovies.find(
+        (item) => item.nameRU.toLowerCase() === movie.nameRU.toLowerCase()
+      );
+    } else {
+      return false;
+    }
   }, [movie.nameRU, saveMovies]);
 
   const handleLikeOrDell = () => {

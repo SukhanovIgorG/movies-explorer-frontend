@@ -1,9 +1,9 @@
 import {useNavigate, Link} from 'react-router-dom';
 
-import Hero from '../Hero/Hero';
-import About from '../About/About';
-import Tech from '../Tech/Tech';
-import Student from '../Student/Student';
+import Hero from './Hero/Hero';
+import About from './About/About';
+import Tech from './Tech/Tech';
+import Student from './Student/Student';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 

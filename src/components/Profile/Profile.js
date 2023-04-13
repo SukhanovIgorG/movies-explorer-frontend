@@ -5,7 +5,7 @@ import {updateUser} from '../../utils/MainApi';
 import {apiErrorController} from '../../utils/errorController';
 import {REG_EMAIL, REG_NAME} from '../../constants/constants';
 
-import Header from '../Header/Header';
+import Header from '../App/Header/Header';
 
 function Profile({menuOpen, menuClose, logOut, menuStatus, onSetCurrentUser}) {
   const currentUser = useContext(CurrentUserContext);
@@ -41,8 +41,8 @@ function Profile({menuOpen, menuClose, logOut, menuStatus, onSetCurrentUser}) {
   }, [email, name]);
 
   useEffect(() => {
-    setName(currentUser.name);
-    setEmail(currentUser.email);
+    currentUser.name ? setName(currentUser.name) : setName('');
+    currentUser.email ? setEmail(currentUser.email) : setEmail('');
   }, [currentUser.name, currentUser.email]);
 
   const validationEmail = (value) => {
