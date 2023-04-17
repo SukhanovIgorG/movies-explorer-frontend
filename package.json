@@ -1,7 +1,7 @@
 {
   "name": "movies-explorer-frontend",
   "version": "1.0.0",
-  "description": "servis for movies",
+  "description": "service for movies",
   "main": "index.js",
   "homepage": "https://SukhanovIgorG.github.io/movies-explorer-frontend/",
   "repository": {
